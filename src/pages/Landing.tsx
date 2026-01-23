@@ -199,7 +199,7 @@ export function Landing() {
                         </Link>
                     </motion.div>
 
-                    <div className="grid md:grid-cols-3 gap-6">
+                    <div className="grid md:grid-cols-4 gap-6">
                         {productLines.map((line, index) => (
                             <motion.div
                                 key={line.name}
@@ -217,7 +217,8 @@ export function Landing() {
                                         style={{ backgroundColor: line.color }}
                                     >
                                         <span className="text-white text-xl font-bold">
-                                            {line.name.charAt(0)}
+                                            {/* Brand Logo Here */}
+                                            {line.name.charAt(0)} 
                                         </span>
                                     </div>
                                     <h3 className="text-xl font-semibold text-charcoal mb-2 group-hover:text-amber-600 transition-colors">
@@ -234,7 +235,7 @@ export function Landing() {
             </section>
 
             {/* Stats Section */}
-            <section className="py-24 bg-charcoal w-full">
+            <section className="py-24 bg-charcoal ">
                 <div className="max-w-7xl mx-auto px-8 lg:px-12 w-full">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                         {stats.map((stat, index) => (
@@ -297,27 +298,33 @@ const features = [
 
 const productLines = [
     {
-        name: 'Puspanjali Classic',
+        name: 'Pathsala',
         tagline: 'Timeless quality for everyday writing',
         href: '/brands/classic',
         color: '#b45309',
     },
     {
-        name: 'Puspanjali Academic',
+        name: 'Puspanjali Plus',
         tagline: 'Empowering education through quality stationery',
         href: '/brands/academic',
         color: '#0d9488',
     },
     {
-        name: 'Puspanjali Professional',
+        name: 'Ruff',
         tagline: 'Where professionalism meets precision',
         href: '/brands/professional',
         color: '#4338ca',
     },
+    {
+        name: 'Bullet Plus',
+        tagline: 'Where professionalism meets precision',
+        href: '/brands/professional',
+        color: '#ff00eaff',
+    },
 ];
 
 const stats = [
-    { value: '3', label: 'Product Lines' },
+    { value: '4', label: 'Product Lines' },
     { value: '30+', label: 'Notebook Variants' },
     { value: '100%', label: 'Quality Tested' },
     { value: 'Nepal', label: 'Proudly Made In' },

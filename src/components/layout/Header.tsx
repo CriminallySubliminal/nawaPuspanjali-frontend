@@ -62,10 +62,10 @@ export function Header() {
                         </motion.div>
                         <div className="hidden sm:block">
                             <span className="block text-xl font-bold text-charcoal tracking-tight">
-                                Puspanjali
+                                Nawa Puspanjali
                             </span>
                             <span className="block text-xs text-graphite uppercase tracking-widest">
-                                Notebook Manufacturing
+                                Copy Tatha Stationery Udhyog
                             </span>
                         </div>
                     </Link>

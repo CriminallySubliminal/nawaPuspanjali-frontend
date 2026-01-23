@@ -6,6 +6,7 @@ import { Sizes } from './pages/Sizes';
 import { NotebookDetail } from './pages/NotebookDetail';
 import { About } from './pages/About';
 import { Contact } from './pages/Contact';
+import { ScrollToTop } from './components/layout/ScrollToTop';
 
 /**
  * Main App component with routing configuration.
@@ -13,6 +14,7 @@ import { Contact } from './pages/Contact';
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <Layout>
         <Routes>
           <Route path="/" element={<Landing />} />
