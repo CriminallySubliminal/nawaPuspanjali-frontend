@@ -1,0 +1,224 @@
+@import "tailwindcss";
+
+/* Enhanced color system - bold but controlled */
+:root {
+  /* Neutral base */
+  --ivory: #faf9f7;
+  --warm-gray: #f5f4f2;
+  --warm-gray-dark: #e8e6e3;
+  --slate-100: #f1f5f9;
+  --slate-200: #e2e8f0;
+
+  /* Text hierarchy */
+  --charcoal: #1f2937;
+  --charcoal-light: #374151;
+  --graphite: #6b7280;
+  --slate-text: #94a3b8;
+
+  /* Primary accent (amber) */
+  --amber-400: #fbbf24;
+  --amber-500: #f59e0b;
+  --amber-600: #d97706;
+  --amber-700: #b45309;
+
+  /* Secondary accent (teal) */
+  --teal-400: #2dd4bf;
+  --teal-500: #14b8a6;
+  --teal-600: #0d9488;
+  --teal-700: #0f766e;
+
+  /* Tertiary (indigo) */
+  --indigo-500: #6366f1;
+  --indigo-600: #4f46e5;
+  --indigo-700: #4338ca;
+}
+
+@theme {
+  /* Base colors */
+  --color-ivory: #faf9f7;
+  --color-warm-gray: #f5f4f2;
+  --color-warm-gray-dark: #e8e6e3;
+
+  /* Text */
+  --color-charcoal: #1f2937;
+  --color-charcoal-light: #374151;
+  --color-graphite: #6b7280;
+  --color-slate-text: #94a3b8;
+
+  /* Primary */
+  --color-amber-400: #fbbf24;
+  --color-amber-500: #f59e0b;
+  --color-amber-600: #d97706;
+  --color-amber-700: #b45309;
+
+  /* Secondary */
+  --color-teal-400: #2dd4bf;
+  --color-teal-500: #14b8a6;
+  --color-teal-600: #0d9488;
+  --color-teal-700: #0f766e;
+
+  /* Tertiary */
+  --color-indigo-500: #6366f1;
+  --color-indigo-600: #4f46e5;
+  --color-indigo-700: #4338ca;
+
+  /* Legacy compatibility */
+  --color-paper-white: #faf9f7;
+  --color-paper-cream: #f5f4f2;
+  --color-ink-blue: #1e3a5f;
+  --color-forest-green: #0f766e;
+
+  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+* {
+
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--ivory);
+  color: var(--charcoal);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Container utility */
+.container-wide {
+  max-width: 80rem;
+  /* 1280px */
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .container-wide {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* Focus styles for accessibility */
+:focus-visible {
+  outline: 2px solid var(--amber-500);
+  outline-offset: 2px;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--warm-gray);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--graphite);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--charcoal-light);
+}
+
+/* Animation keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.4s ease-out;
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+/* Glassmorphism utility */
+.glass {
+  background: rgba(250, 249, 247, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.glass-dark {
+  background: rgba(31, 41, 55, 0.9);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Card shadow utilities */
+.shadow-subtle {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.shadow-medium {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04), 0 10px 24px rgba(0, 0, 0, 0.06);
+}
+
+.shadow-heavy {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06), 0 20px 40px rgba(0, 0, 0, 0.08);
+}
+
+/* Line clamp utility */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Aspect ratio utilities */
+.aspect-notebook {
+  aspect-ratio: 5 / 7;
+}
+
+.aspect-card {
+  aspect-ratio: 4 / 3;
+}
