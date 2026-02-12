@@ -8,7 +8,7 @@ export function Contact() {
     return (
         <div className="min-h-screen">
             {/* Header */}
-            <section className="bg-gradient-to-b from-warm-gray to-ivory py-16 lg:py-20">
+            <section className="bg-ivory py-16 lg:py-20">
                 <div className="max-w-7xl mx-auto px-6 lg:px-8">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -17,7 +17,7 @@ export function Contact() {
                     >
                         <nav className="text-sm text-graphite mb-6" aria-label="Breadcrumb">
                             <Link to="/" className="hover:text-charcoal transition-colors">Home</Link>
-                            <span className="mx-3">/</span>
+                            <span className="mx-3">{'>'}</span>
                             <span className="text-charcoal font-medium">Contact</span>
                         </nav>
                         <h1 className="text-4xl md:text-5xl font-bold text-charcoal mb-4">

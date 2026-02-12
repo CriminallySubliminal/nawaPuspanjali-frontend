@@ -40,14 +40,15 @@ export function Brands() {
         fetchBrands();
     }, []);
 
-    const handleBrandSelect = (brandId: string) => {
-        navigate(`/brands/${brandId}`);
+    const handleBrandSelect = (brand: Brand) => {
+        // Navigate to brand notebooks page using slug and passing ID in state for easier fetching
+        navigate(`/brands/${brand.slug}/notebooks`, { state: { brandId: brand.id } });
     };
 
     return (
         <div className="min-h-screen">
             {/* Page Header */}
-            <section className="bg-gradient-to-b from-warm-gray to-ivory py-16 lg:py-20">
+            <section className="bg-ivory py-16 lg:py-20">
                 <div className="max-w-7xl mx-auto px-6 lg:px-8">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -56,7 +57,7 @@ export function Brands() {
                     >
                         <nav className="text-sm text-graphite mb-6" aria-label="Breadcrumb">
                             <a href="/" className="hover:text-charcoal transition-colors">Home</a>
-                            <span className="mx-3">/</span>
+                            <span className="mx-3">{'>'}</span>
                             <span className="text-charcoal font-medium">Products</span>
                         </nav>
                         <h1 className="text-4xl md:text-5xl font-bold text-charcoal mb-4">

@@ -1,58 +1,98 @@
 /**
- * TypeScript type definitions for the Notebook Portfolio application.
- * These types define the data contracts for the entire application.
- */
-
-/**
- * Represents a notebook brand within the company's product line.
+ * Represents a notebook brand.
  */
 export interface Brand {
-    id: string;
+    id: number;
     name: string;
-    description: string;
-    tagline: string;
-    logoUrl: string;
-    accentColor: string;
+    slug: string;
+    description?: string;
 }
 
 /**
- * Represents a size category for notebooks within a brand.
+ * Represents a type of notebook (e.g., Copy, Register).
  */
-export interface NotebookSize {
-    id: string;
-    brandId: string;
+export interface NotebookType {
+    id: number;
     name: string;
-    dimensions: string;
-    notebookCount: number;
+    slug: string;
 }
 
 /**
- * Represents an individual notebook product.
+ * Represents a notebook size.
+ */
+export interface Size {
+    id: number;
+    name: string;
+    slug: string;
+    display_order: number;
+}
+
+/**
+ * Represents a ruling style (e.g., 2-lined, Single-lined).
+ */
+export interface Ruling {
+    id: number;
+    name: string;
+    slug: string;
+}
+
+/**
+ * Represents a specific variant of a notebook.
+ */
+export interface NotebookVariant {
+    id: number;
+    slug: string;
+    notebook_name: string;
+    notebook_brand: Brand;
+    notebook_type: NotebookType;
+    size: Size;
+    ruling: Ruling;
+    no_of_pages: number;
+    price_per_dozen: string; // Decimal comes as string from DRF
+    price_per_unit: string;
+    front_cover?: string;
+    back_cover?: string;
+    full_description?: string;
+    display_name: string;
+    is_active: boolean;
+    created_at: string;
+    updated_at: string;
+}
+
+/**
+ * Represents a base notebook product containing multiple variants.
  */
 export interface Notebook {
-    id: string;
-    brandId: string;
-    sizeId: string;
+    id: number;
     name: string;
-    pages: number;
-    binding: string;
-    paperType: string;
-    ruling: string;
-    coverType: string;
-    frontCoverUrl: string;
-    backCoverUrl: string;
-    colorScheme: string;
+    slug: string;
+    brand: Brand;
+    notebook_type: NotebookType;
+    base_description: string;
+    is_active: boolean;
+    variants: NotebookVariant[];
+    available_sizes: Size[];
+    available_rulings: Ruling[];
+    created_at: string;
+    updated_at: string;
 }
 
 /**
- * Generic API response wrapper for type-safe data fetching.
- * Designed to match future REST API response structure.
+ * Available filter options for product pages.
  */
-export interface ApiResponse<T> {
-    data: T;
-    success: boolean;
-    message?: string;
+export interface FilterOptions {
+    brands: Brand[];
+    notebook_types: NotebookType[];
+    sizes: Size[];
+    rulings: Ruling[];
 }
+
+/**
+ * Generic API response wrapper.
+ */
+export type ApiResponse<T> =
+    | { data: T; success: true; message?: string }
+    | { data: null; success: false; message: string };
 
 /**
  * Loading state type for consistent UI state management.

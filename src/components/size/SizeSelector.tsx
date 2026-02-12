@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion';
-import type { NotebookSize } from '../../types';
+import type { Size } from '../../types';
 
 interface SizeSelectorProps {
-    sizes: NotebookSize[];
-    selectedId: string | null;
-    onSelect: (sizeId: string) => void;
+    sizes: Size[];
+    selectedId: number;
+    onSelect: (sizeId: number) => void;
 }
 
 /**
@@ -50,10 +50,10 @@ export function SizeSelector({ sizes, selectedId, onSelect }: SizeSelectorProps)
 
                             <span className="block text-lg font-semibold">{size.name}</span>
                             <span className={`block text-sm mt-1 ${isSelected ? 'text-slate-text' : 'text-graphite'}`}>
-                                {size.dimensions}
+                                {/* {size.dimensions} */}
                             </span>
                             <span className={`block text-xs mt-1 ${isSelected ? 'text-slate-text' : 'text-graphite'}`}>
-                                {size.notebookCount} {size.notebookCount === 1 ? 'variant' : 'variants'}
+                                {/* {size.notebookCount} {size.notebookCount === 1 ? 'variant' : 'variants'} */}
                             </span>
                         </motion.button>
                     );

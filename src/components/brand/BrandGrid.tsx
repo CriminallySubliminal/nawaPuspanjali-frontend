@@ -4,7 +4,7 @@ import { BrandCard } from './BrandCard';
 
 interface BrandGridProps {
     brands: Brand[];
-    onSelect: (brandId: string) => void;
+    onSelect: (brand: Brand) => void;
 }
 
 /**
@@ -32,7 +32,7 @@ export function BrandGrid({ brands, onSelect }: BrandGridProps) {
                 <div key={brand.id} role="listitem">
                     <BrandCard
                         brand={brand}
-                        onClick={() => onSelect(brand.id)}
+                        onClick={() => onSelect(brand)}
                         index={index}
                     />
                 </div>

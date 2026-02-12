@@ -73,7 +73,7 @@ export function Header() {
                     {/* Navigation */}
                     <nav className="flex items-center gap-2" aria-label="Main navigation">
                         <NavLink href="/" isActive={isActive('/')} label="Home" />
-                        <NavLink href="/brands" isActive={isActive('/brands')} label="Products" />
+                        <NavLink href="/products" isActive={isActive('/products') || location.pathname.startsWith('/notebooks/')} label="Products" />
                         <NavLink href="/about" isActive={isActive('/about')} label="About" />
                         <NavLink href="/contact" isActive={isActive('/contact')} label="Contact" />
                     </nav>
