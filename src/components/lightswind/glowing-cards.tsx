@@ -43,12 +43,14 @@ export interface GlowingCardsProps {
     textColor?: string;
     hoverBg?: string;
   };
+  /** Custom class name for the grid container (replaces flex behavior) */
+  gridClassName?: string;
 }
 
 export const GlowingCard: React.FC<GlowingCardProps> = ({
   children,
   className,
-  glowColor = "#3b82f6",
+  glowColor = "#274c77",
   hoverEffect = true,
   ...props
 }) => {
@@ -85,6 +87,7 @@ export const GlowingCards: React.FC<GlowingCardsProps> = ({
   borderRadius = "1rem",
   responsive = true,
   customTheme,
+  gridClassName,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -152,8 +155,10 @@ export const GlowingCards: React.FC<GlowingCardsProps> = ({
       >
         <div
           className={cn(
-            "flex items-center justify-center flex-wrap gap-[var(--gap)]",
-            responsive && "flex-col sm:flex-row "
+            gridClassName ? gridClassName : [
+              "flex items-center justify-center flex-wrap gap-[var(--gap)]",
+              responsive && "flex-col sm:flex-row "
+            ]
           )}
         >
           {children}
@@ -177,15 +182,17 @@ export const GlowingCards: React.FC<GlowingCardsProps> = ({
           >
             <div
               className={cn(
-                "flex items-center justify-center flex-wrap gap-[var(--gap)] max-w-[var(--max-width)] center mx-auto",
-                responsive && "flex-col sm:flex-row"
+                gridClassName ? gridClassName : [
+                  "flex items-center justify-center flex-wrap gap-[var(--gap)] max-w-[var(--max-width)] center mx-auto",
+                  responsive && "flex-col sm:flex-row"
+                ]
               )}
               style={{ padding: "var(--padding)" }} // String literal
             >
               {React.Children.map(children, (child) => {
                 if (React.isValidElement(child) && child.type === GlowingCard) {
                   const cardElement = child as React.ReactElement<GlowingCardProps>;
-                  const cardGlowColor = cardElement.props.glowColor || "#3b82f6";
+                  const cardGlowColor = cardElement.props.glowColor || "#274c77";
                   return React.cloneElement(cardElement, {
                     className: cn(
                       cardElement.props.className,

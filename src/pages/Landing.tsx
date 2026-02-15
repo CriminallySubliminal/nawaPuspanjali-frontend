@@ -1,20 +1,23 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Marquee from 'react-fast-marquee';
 import Carousel from '../components/ui/Carousel';
 import CountUp from '../components/CountUp';
-import { GlowingCards, GlowingCard } from '../components/lightswind/glowing-cards';
-import QualitySection from '../components/layout/QualitySection';
+// import { GlowingCards, GlowingCard } from '../components/lightswind/glowing-cards'; // Moved to UnifiedFeaturesSection
+import UnifiedFeaturesSection from '../components/layout/UnifiedFeaturesSection';
 import pathsalaLogo from '../assets/logos/pathsala.png';
 import puspanjaliPlusLogo from '../assets/logos/puspanjali_plus.png';
 import ruffLogo from '../assets/logos/ruff.png';
 import bulletPlusLogo from '../assets/logos/bullet_plus.png';
 
 
+
 /**
  * Modern landing page with animated hero and feature sections.
  */
 export function Landing() {
+    const [showAllDistricts, setShowAllDistricts] = useState(false);
     return (
         <div>
             {/* Hero Section */}
@@ -216,7 +219,7 @@ export function Landing() {
                 </motion.div>
 
                 {/* Content Container */}
-                <div className="relative z-10 max-w-5xl mx-auto px-6 py-24 text-center">
+                <div className="relative z-10 max-w-5xl mx-auto px-8 py-24 text-center">
                     {/* Badge */}
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
@@ -281,61 +284,11 @@ export function Landing() {
                 </div>
 
                 {/* Bottom Gradient Fade - taller for smoother blend */}
-                <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-white via-white/80 to-transparent" />
+                {/* <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-white via-white/80 to-transparent" /> */}
             </section>
 
-            {/* Features Section */}
-            <section className="py-24 bg-white w-full">
-                <div className="max-w-7xl mx-auto px-8 lg:px-12 w-full">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.5 }}
-                        className="text-center mb-16"
-                    >
-                        <h2 className="text-3xl md:text-4xl font-bold text-charcoal mb-4">
-                            Why Puspanjali
-                        </h2>
-                        <p className="text-graphite text-lg max-w-2xl mx-auto">
-                            Built on principles of quality, reliability, and thoughtful design
-                        </p>
-                    </motion.div>
-
-                    <GlowingCards
-                        glowRadius={30}
-                        glowOpacity={0.8}
-                        gap="2rem"
-                        className="w-full"
-                    >
-                        {features.map((feature) => (
-                            <GlowingCard
-                                key={feature.title}
-                                glowColor={feature.color}
-                                className="bg-ivory dark:bg-zinc-900 border-charcoal/5 shadow-subtle hover:shadow-medium"
-                            >
-                                <div
-                                    className="w-14 h-14 rounded-xl flex items-center justify-center mb-6"
-                                    style={{ backgroundColor: `${feature.color}15` }}
-                                >
-                                    <div style={{ color: feature.color }}>
-                                        {feature.icon}
-                                    </div>
-                                </div>
-                                <h3 className="text-xl font-semibold text-charcoal dark:text-white mb-3">
-                                    {feature.title}
-                                </h3>
-                                <p className="text-graphite dark:text-zinc-400 leading-relaxed">
-                                    {feature.description}
-                                </p>
-                            </GlowingCard>
-                        ))}
-                    </GlowingCards>
-                </div>
-            </section>
-
-            {/* Quality & Eco-friendly Section */}
-            <QualitySection />
+            {/* Unified Features & Quality Section */}
+            <UnifiedFeaturesSection />
 
             {/* Product Lines Preview */}
             <section className="py-24 bg-ivory w-full">
@@ -452,50 +405,91 @@ export function Landing() {
                     </motion.div>
                 </div>
 
-                {/* Marquee Container */}
+                {/* Districts Display - Responsive Container */}
                 <div className="relative">
-                    {/* Gradient Overlays for smooth fade effect */}
-                    <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-brand-darkest to-transparent z-10" />
-                    <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-brand-darkest to-transparent z-10" />
+                    {/* Mobile Compact Grid Layout */}
+                    <div className="md:hidden px-6 mb-12">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                            {(showAllDistricts ? distributionDistricts : distributionDistricts.slice(0, 9)).map((district, index) => (
+                                <motion.div
+                                    key={`grid-${index}`}
+                                    initial={{ opacity: 0, scale: 0.9 }}
+                                    whileInView={{ opacity: 1, scale: 1 }}
+                                    viewport={{ once: true }}
+                                    transition={{ duration: 0.3, delay: (index % 9) * 0.02 }}
+                                    className="px-4 py-3 bg-white/10 backdrop-blur-sm rounded-xl border border-white/10 text-center flex flex-col items-center justify-center gap-2 group hover:bg-white/20 hover:border-white/30 transition-all duration-300"
+                                >
+                                    <span className="w-1.5 h-1.5 bg-brand-light rounded-full group-hover:scale-125 transition-transform" />
+                                    <span className="text-white text-xs font-medium tracking-wide truncate w-full">
+                                        {district}
+                                    </span>
+                                </motion.div>
+                            ))}
+                        </div>
 
-                    {/* First Marquee - Left to Right */}
-                    <Marquee
-                        speed={40}
-                        gradient={false}
-                        className="py-4"
-                    >
-                        {distributionDistricts.slice(0, Math.ceil(distributionDistricts.length / 2)).map((district, index) => (
-                            <div
-                                key={`row1-${index}`}
-                                className="mx-3 px-6 py-3 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 hover:bg-white/20 hover:scale-105 transition-all duration-300 cursor-default"
+                        {/* View All Toggle Button */}
+                        <motion.button
+                            onClick={() => setShowAllDistricts(!showAllDistricts)}
+                            className="w-full mt-6 py-4 px-6 bg-white/5 border border-white/10 rounded-xl text-white/80 font-medium text-sm flex items-center justify-center gap-2 hover:bg-white/10 transition-colors"
+                            whileTap={{ scale: 0.98 }}
+                        >
+                            {showAllDistricts ? 'Show Less' : `View All ${distributionDistricts.length} Districts`}
+                            <svg
+                                className={`w-4 h-4 transition-transform duration-300 ${showAllDistricts ? 'rotate-180' : ''}`}
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
                             >
-                                <span className="text-white font-medium whitespace-nowrap flex items-center gap-2">
-                                    <span className="w-2 h-2 bg-brand-light rounded-full" />
-                                    {district}
-                                </span>
-                            </div>
-                        ))}
-                    </Marquee>
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </motion.button>
+                    </div>
 
-                    {/* Second Marquee - Right to Left */}
-                    <Marquee
-                        speed={35}
-                        gradient={false}
-                        direction="right"
-                        className="py-4"
-                    >
-                        {distributionDistricts.slice(Math.ceil(distributionDistricts.length / 2)).map((district, index) => (
-                            <div
-                                key={`row2-${index}`}
-                                className="mx-3 px-6 py-3 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 hover:bg-white/20 hover:scale-105 transition-all duration-300 cursor-default"
-                            >
-                                <span className="text-white font-medium whitespace-nowrap flex items-center gap-2">
-                                    <span className="w-2 h-2 bg-brand-mid rounded-full" />
-                                    {district}
-                                </span>
-                            </div>
-                        ))}
-                    </Marquee>
+                    {/* Desktop Marquee Layout (hidden on mobile) */}
+                    <div className="hidden md:block">
+                        {/* Gradient Overlays for smooth fade effect */}
+                        <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-brand-darkest to-transparent z-10" />
+                        <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-brand-darkest to-transparent z-10" />
+
+                        {/* First Marquee - Left to Right */}
+                        <Marquee
+                            speed={40}
+                            gradient={false}
+                            className="py-4"
+                        >
+                            {distributionDistricts.slice(0, Math.ceil(distributionDistricts.length / 2)).map((district, index) => (
+                                <div
+                                    key={`row1-${index}`}
+                                    className="mx-3 px-6 py-3 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 hover:bg-white/20 hover:scale-105 transition-all duration-300 cursor-default"
+                                >
+                                    <span className="text-white font-medium whitespace-nowrap flex items-center gap-2">
+                                        <span className="w-2 h-2 bg-brand-light rounded-full" />
+                                        {district}
+                                    </span>
+                                </div>
+                            ))}
+                        </Marquee>
+
+                        {/* Second Marquee - Right to Left */}
+                        <Marquee
+                            speed={35}
+                            gradient={false}
+                            direction="right"
+                            className="py-4"
+                        >
+                            {distributionDistricts.slice(Math.ceil(distributionDistricts.length / 2)).map((district, index) => (
+                                <div
+                                    key={`row2-${index}`}
+                                    className="mx-3 px-6 py-3 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 hover:bg-white/20 hover:scale-105 transition-all duration-300 cursor-default"
+                                >
+                                    <span className="text-white font-medium whitespace-nowrap flex items-center gap-2">
+                                        <span className="w-2 h-2 bg-brand-mid rounded-full" />
+                                        {district}
+                                    </span>
+                                </div>
+                            ))}
+                        </Marquee>
+                    </div>
                 </div>
 
                 {/* Stats under marquee */}
@@ -539,7 +533,7 @@ export function Landing() {
                             Visit Our Factory
                         </h2>
                         <p className="text-graphite text-lg max-w-2xl mx-auto">
-                            Come see where quality notebooks are made. We're located in Bharatpur, Nepal.
+                            Come see where quality notebooks are made. We're located in Jyamire, Chitwan, Nepal.
                         </p>
                     </motion.div>
 
@@ -592,7 +586,7 @@ export function Landing() {
                                         Puspanjali Stationery
                                     </h3>
                                     <p className="text-graphite text-sm leading-relaxed">
-                                        Bharatpur, Chitwan<br />
+                                        Jyamire, Chitwan<br />
                                         Nepal
                                     </p>
                                     <a
@@ -627,7 +621,7 @@ export function Landing() {
                                 </svg>
                             </div>
                             <div className="flex-1">
-                                <h3 className="font-semibold text-charcoal">Bharatpur, Chitwan, Nepal</h3>
+                                <h3 className="font-semibold text-charcoal">Jyamire, Chitwan, Nepal</h3>
                             </div>
                             <a
                                 href="https://www.google.com/maps?q=27.617296011390057,84.54562497041809"
@@ -641,43 +635,14 @@ export function Landing() {
                     </motion.div>
                 </div>
             </section>
+
+            {/* <NepalOutline>
+                <div></div>
+            </NepalOutline> */}
         </div>
     );
 }
 
-const features = [
-    {
-        title: 'Quality Assured',
-        description: 'Every notebook undergoes rigorous quality checks. From paper weight to binding strength, we ensure consistency in every batch.',
-        color: '#f59e0b',
-        icon: (
-            <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-            </svg>
-        ),
-    },
-    {
-        title: 'Wide Selection',
-        description: 'Multiple brands, sizes, and specifications to match your exact requirements. Academic, professional, or everyday use.',
-        color: '#0d9488',
-        icon: (
-            <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-            </svg>
-        ),
-    },
-    {
-        title: 'Made in Nepal',
-        description: 'Proudly manufactured in Nepal, supporting local industry and craftsmanship while serving customers nationwide.',
-        color: '#4338ca',
-        icon: (
-            <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-        ),
-    },
-];
 
 const productLines = [
     {

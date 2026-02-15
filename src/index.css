@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&display=swap');
 @plugin 'lightswind/plugin';
 @import "tw-animate-css";
 
@@ -10,6 +11,8 @@
   font-weight: 300 800;
   font-style: normal;
 }
+
+/* ... existing code ... */
 
 @font-face {
   font-family: 'Crimson Text';
@@ -39,54 +42,44 @@
   font-style: italic;
 }
 
-/* Enhanced color system - bold but controlled */
-/* New Blue Color Palette 
-     #03045E (Darkest)
-     #0077B6 (Deep)
-     #00B4D8 (Mid)
-     #90E0EF (Light)
-     #CAF0F8 (Lightest)
+/* Enhanced color system - High-Contrast Vibrant Palette (Night Owl Inspired) */
+/* New Color Scheme:
+     #011627 (Maastricht Blue - Primary Dark)
+     #fdfffc (Baby Powder - Neutral)
+     #2ec4b6 (Tiffany Blue - Secondary Accent)
+     #e71d36 (Rose - High-Contrast CTA)
+     #ff9f1c (Orange Peel - Warm Detail)
   */
 :root {
-  /* Neutral base - Mapped to Lightest Blue tones */
-  --ivory: #ffffff;
-  /* Keeping main background white for readability, accents will be blue */
-  --warm-gray: #CAF0F8;
-  /* Lightest Blue */
-  --warm-gray-dark: #90E0EF;
-  /* Light Blue */
-  --slate-100: #e0f2fe;
-  --slate-200: #bae6fd;
+  /* Neutral base */
+  --ivory: #fdfffc;
+  --warm-gray: #f1f5f9;
+  --warm-gray-dark: #cbd5e1;
+  --slate-100: #f8fafc;
+  --slate-200: #e2e8f0;
 
-  /* Text hierarchy - Mapped to Darkest Blue tones */
-  --charcoal: #03045E;
-  /* Darkest Blue */
-  --charcoal-light: #020344;
-  /* Even Darker or varied tone */
-  --graphite: #0077B6;
-  /* Deep Blue for secondary text */
-  --slate-text: #00B4D8;
-  /* Mid Blue for tertiary text */
+  /* Text hierarchy */
+  --charcoal: #011627;
+  --charcoal-light: #0d2a42;
+  --graphite: #2ec4b6;
+  --slate-text: #475569;
 
-  /* Primary accent (amber) -> Mapped to Deep Blue */
-  --amber-400: #00B4D8;
-  --amber-500: #0096c7;
-  --amber-600: #0077B6;
-  /* Deep Blue */
-  --amber-700: #03045E;
+  /* Primary accent (amber) -> Mapped to Rose (High Contrast) */
+  --amber-400: #ff9f1c;
+  --amber-500: #e71d36;
+  --amber-600: #c1121f;
+  --amber-700: #780001;
 
-  /* Secondary accent (teal) -> Mapped to Mid Blue */
-  --teal-400: #48cae4;
-  --teal-500: #00B4D8;
-  /* Mid Blue */
-  --teal-600: #0096c7;
-  --teal-700: #0077B6;
+  /* Secondary accent (teal) -> Mapped to Tiffany Blue */
+  --teal-400: #2ec4b6;
+  --teal-500: #2ec4b6;
+  --teal-600: #24998d;
+  --teal-700: #1a7067;
 
-  /* Tertiary (indigo) -> Mapped to Darkest Blue */
-  --indigo-500: #0077B6;
-  --indigo-600: #03045E;
-  /* Darkest Blue */
-  --indigo-700: #020344;
+  /* Tertiary (indigo) -> Mapped to Orange Peel */
+  --indigo-500: #ff9f1c;
+  --indigo-600: #e68a00;
+  --indigo-700: #cc7a00;
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -133,7 +126,7 @@
   --color-graphite: var(--graphite);
   --color-slate-text: var(--slate-text);
 
-  /* Primary (mapped to Blues) */
+  /* Primary (mapped to Rose & Teal) */
   --color-amber-400: var(--amber-400);
   --color-amber-500: var(--amber-500);
   --color-amber-600: var(--amber-600);
@@ -151,20 +144,21 @@
   --color-indigo-700: var(--indigo-700);
 
   /* Helper vars containing raw palette for direct use if needed */
-  --color-brand-darkest: #03045E;
-  --color-brand-deep: #0077B6;
-  --color-brand-mid: #00B4D8;
-  --color-brand-light: #90E0EF;
-  --color-brand-lightest: #CAF0F8;
+  --color-brand-darkest: #011627;
+  --color-brand-deep: #e71d36;
+  --color-brand-mid: #ff9f1c;
+  --color-brand-light: #2ec4b6;
+  --color-brand-lightest: #fdfffc;
 
   /* Legacy compatibility */
-  --color-paper-white: #ffffff;
-  --color-paper-cream: #CAF0F8;
-  --color-ink-blue: #03045E;
-  --color-forest-green: #0077B6;
+  --color-paper-white: #fdfffc;
+  --color-paper-cream: #fdfffc;
+  --color-ink-blue: #011627;
+  --color-forest-green: #2ec4b6;
 
   --font-sans: 'Moderustic', 'Crimson Text', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-serif: 'Crimson Text', Georgia, serif;
+  --font-handwriting: 'Caveat', cursive;
 }
 
 * {
@@ -262,8 +256,10 @@ h6 {
 }
 
 .no-scrollbar {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 /* Animation keyframes */

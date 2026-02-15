@@ -73,7 +73,7 @@
     align-items: center;
     justify-content: center;
     border-radius: 12px;
-    background-color: #f59e0b;
+    background-color: var(--amber-500);
 }
 
 .carousel-icon-wrapper {
@@ -148,7 +148,7 @@
 }
 
 .carousel-indicator.active {
-    background-color: #f59e0b;
+    background-color: var(--amber-500);
     width: 20px;
     border-radius: 4px;
 }

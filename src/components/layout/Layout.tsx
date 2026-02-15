@@ -3,6 +3,7 @@ import { Header } from './Header';
 import { motion } from 'framer-motion';
 import GridPattern from '@/components/ui/grid-pattern';
 import { cn } from '@/lib/utils';
+import StaggeredMenu from '../StaggeredMenu';
 
 interface LayoutProps {
     children: ReactNode;
@@ -14,7 +15,7 @@ interface LayoutProps {
  */
 export function Layout({ children }: LayoutProps) {
     return (
-        <div className="min-h-screen bg-ivory relative overflow-hidden">
+        <div className="min-h-screen bg-ivory relative overflow-hidden scroll-smooth">
             <GridPattern
                 width={30}
                 height={30}
@@ -25,6 +26,28 @@ export function Layout({ children }: LayoutProps) {
                     "fixed inset-0 z-0 opacity-40",
                 )}
             />
+            <div className="lg:hidden">
+                <StaggeredMenu
+                    isFixed={true}
+                    position="right"
+                    displayLogo={false} // Header logo is already visible
+                    menuButtonColor="#011627"
+                    openMenuButtonColor="#011627"
+                    accentColor="#e71d36"
+                    colors={['#fdfffc', '#011627', '#e71d36']}
+                    items={[
+                        { label: 'Home', link: '/', ariaLabel: 'Go to home' },
+                        { label: 'Products', link: '/products', ariaLabel: 'Go to products' },
+                        { label: 'About', link: '/about', ariaLabel: 'Go to about' },
+                        { label: 'Contact', link: '/contact', ariaLabel: 'Go to contact' }
+                    ]}
+                    displaySocials={true}
+                    socialItems={[
+                        { label: 'Facebook', link: '#' },
+                        { label: 'Instagram', link: '#' }
+                    ]}
+                />
+            </div>
             <Header />
 
             {/* Spacer for fixed header */}
@@ -35,7 +58,7 @@ export function Layout({ children }: LayoutProps) {
             </main>
 
             <footer className="mt-10 bg-charcoal text-white">
-                <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16 lg:py-20">
+                <div className="max-w-7xl mx-auto px-8 lg:px-12 py-16 lg:py-20">
                     <div className="flex flex-col md:flex-row md:justify-between items-start gap-12 md:gap-8">
                         {/* Brand Section */}
                         <motion.div
@@ -129,7 +152,7 @@ export function Layout({ children }: LayoutProps) {
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                         </svg>
-                                        <span>Kathmandu, Nepal</span>
+                                        <span>Jyamire, Chitwan, Nepal</span>
                                     </div>
                                     <div className="flex items-center gap-3">
                                         <svg className="w-5 h-5 text-amber-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">

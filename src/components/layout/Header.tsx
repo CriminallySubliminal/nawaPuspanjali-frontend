@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 /**
  * Premium sticky navbar with glassmorphism effect.
@@ -8,7 +8,22 @@ import { motion, AnimatePresence } from 'framer-motion';
  */
 export function Header() {
     const [isScrolled, setIsScrolled] = useState(false);
+    const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+    const [lastHoveredIndex, setLastHoveredIndex] = useState<number | null>(null);
     const location = useLocation();
+
+    const navItems = [
+        { path: '/', label: 'Home' },
+        { path: '/products', label: 'Products' },
+        { path: '/about', label: 'About' },
+        { path: '/contact', label: 'Contact' }
+    ];
+
+    const activeIndex = navItems.findIndex(item => {
+        if (item.path === '/') return location.pathname === '/';
+        return location.pathname.startsWith(item.path) ||
+            (item.path === '/products' && location.pathname.startsWith('/notebooks/'));
+    });
 
     useEffect(() => {
         const handleScroll = () => {
@@ -18,10 +33,12 @@ export function Header() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    const isActive = (path: string): boolean => {
-        if (path === '/') return location.pathname === '/';
-        return location.pathname.startsWith(path);
-    };
+    // Track last hovered to determine return direction
+    useEffect(() => {
+        if (hoveredIndex !== null) {
+            setLastHoveredIndex(hoveredIndex);
+        }
+    }, [hoveredIndex]);
 
     return (
         <motion.header
@@ -43,40 +60,38 @@ export function Header() {
                         <motion.div
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            className="w-12 h-12 bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl flex items-center justify-center shadow-medium"
+                            className="w-12 h-12 bg-brand-deep rounded-xl flex items-center justify-center shadow-medium"
                         >
-                            <svg
-                                className="w-7 h-7 text-white"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                                aria-hidden="true"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={1.5}
-                                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                                />
+                            <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                             </svg>
                         </motion.div>
                         <div className="hidden sm:block">
-                            <span className="block text-xl font-bold text-charcoal tracking-tight">
-                                Nawa Puspanjali
-                            </span>
-                            <span className="block text-xs text-graphite uppercase tracking-widest">
-                                Copy Tatha Stationery Udhyog
-                            </span>
+                            <span className="block text-xl font-bold text-charcoal tracking-tight">Nawa Puspanjali</span>
+                            <span className="block text-xs text-graphite uppercase tracking-widest">Copy Tatha Stationery Udhyog</span>
                         </div>
                     </Link>
 
-                    {/* Navigation */}
-                    <nav className="flex items-center gap-2" aria-label="Main navigation">
-                        <NavLink href="/" isActive={isActive('/')} label="Home" />
-                        <NavLink href="/products" isActive={isActive('/products') || location.pathname.startsWith('/notebooks/')} label="Products" />
-                        <NavLink href="/about" isActive={isActive('/about')} label="About" />
-                        <NavLink href="/contact" isActive={isActive('/contact')} label="Contact" />
+                    {/* Desktop Navigation */}
+                    <nav
+                        className="hidden lg:flex items-center gap-2"
+                        aria-label="Main navigation"
+                        onMouseLeave={() => setHoveredIndex(null)}
+                    >
+                        {navItems.map((item, idx) => (
+                            <NavLink
+                                key={item.path}
+                                href={item.path}
+                                label={item.label}
+                                isActive={activeIndex === idx}
+                                currentIndex={idx}
+                                hoveredIndex={hoveredIndex}
+                                lastHoveredIndex={lastHoveredIndex}
+                                onHover={setHoveredIndex}
+                            />
+                        ))}
                     </nav>
+
                 </div>
             </div>
         </motion.header>
@@ -87,29 +102,58 @@ interface NavLinkProps {
     href: string;
     isActive: boolean;
     label: string;
+    currentIndex: number;
+    hoveredIndex: number | null;
+    lastHoveredIndex: number | null;
+    onHover: (idx: number | null) => void;
 }
 
-function NavLink({ href, isActive, label }: NavLinkProps) {
+function NavLink({ href, isActive, label, currentIndex, hoveredIndex, lastHoveredIndex, onHover }: NavLinkProps) {
+    const isHovered = hoveredIndex === currentIndex;
+    const isShowing = (isActive && hoveredIndex === null) || isHovered;
+
+    // Determine transform origin based on direction
+    let originX = 0; // default left
+
+    if (isActive && hoveredIndex !== null && hoveredIndex !== currentIndex) {
+        // Active link collapsing because someone else is hovered
+        originX = hoveredIndex > currentIndex ? 1 : 0;
+    } else if (isActive && hoveredIndex === null && lastHoveredIndex !== null) {
+        // Active link returning from a hover
+        originX = lastHoveredIndex > currentIndex ? 1 : 0;
+    } else {
+        // Generic entry (always from left to right as requested)
+        originX = 0;
+    }
+
     return (
         <Link
             to={href}
-            className="relative px-4 py-2 text-sm font-medium transition-colors group"
+            className="relative px-4 py-2 text-sm font-medium transition-colors group flex items-center"
+            onMouseEnter={() => onHover(currentIndex)}
         >
-            <span className={isActive ? 'text-amber-600' : 'text-charcoal-light hover:text-charcoal'}>
-                {label}
+            <span className="relative">
+                <span className={`transition-colors duration-500 ${isActive ? 'text-brand-deep' : 'text-charcoal-light hover:text-charcoal'}`}>
+                    {label}
+                </span>
+
+                <motion.div
+                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-brand-deep rounded-full shadow-[0_0_8px_rgba(231,29,54,0.4)]"
+                    initial={false}
+                    animate={{
+                        scaleX: isShowing ? 1 : 0,
+                        opacity: isShowing ? 1 : 0
+                    }}
+                    style={{ originX }}
+                    transition={{
+                        type: "spring",
+                        stiffness: 200,
+                        damping: 40,
+                        mass: 1.2,
+                        delay: isHovered ? 0.25 : 0 // Hover delay remains
+                    }}
+                />
             </span>
-            <AnimatePresence>
-                {isActive && (
-                    <motion.div
-                        layoutId="navbar-indicator"
-                        className="absolute inset-x-2 -bottom-0.5 h-0.5 bg-amber-500 rounded-full"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                    />
-                )}
-            </AnimatePresence>
         </Link>
     );
 }

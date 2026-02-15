@@ -23,7 +23,6 @@ export function ProductDetail() {
 
     const [notebook, setNotebook] = useState<Notebook | null>(null);
     const [loadingState, setLoadingState] = useState<LoadingState>('idle');
-    const [showBackCover, setShowBackCover] = useState(false);
     const [selectedRuling, setSelectedRuling] = useState<{ name: string, image: string } | null>(null);
 
     useEffect(() => {
@@ -54,7 +53,7 @@ export function ProductDetail() {
         const sizeMap = new Map<string, {
             size: string;
             sizeOrder: number;
-            rulings: Map<string, { ruling: string; price: string; pages: number }>;
+            rulings: Map<string, { ruling: string; price: string; gsm: number }>;
         }>();
 
         notebook.variants.forEach(variant => {
@@ -75,8 +74,8 @@ export function ProductDetail() {
             if (!sizeData.rulings.has(rulingKey)) {
                 sizeData.rulings.set(rulingKey, {
                     ruling: variant.ruling.name,
-                    price: variant.price_per_dozen,
-                    pages: variant.no_of_pages,
+                    price: variant.price_per_unit,
+                    gsm: variant.gsm,
                 });
             }
         });
@@ -91,15 +90,16 @@ export function ProductDetail() {
     };
 
     const variantTable = notebook ? getVariantTable() : [];
-    const firstVariant = notebook?.variants?.[0];
-    const frontCover = firstVariant?.front_cover || '/placeholder-notebook.jpg';
-    const backCover = firstVariant?.back_cover || firstVariant?.front_cover || '/placeholder-notebook.jpg';
+    const mainImage = notebook?.image || '/placeholder-notebook.jpg';
 
-    // Derive unique sizes and rulings from variants for technical specifications
+    // Derive unique sizes, rulings, and GSM from variants for technical specifications
     const derivedSizes = variantTable.map(group => group.size);
     const derivedRulings = Array.from(new Set(
         notebook?.variants?.map(v => v.ruling.name) || []
     ));
+    const uniqueGSMs = Array.from(new Set(
+        notebook?.variants?.map(v => v.gsm) || []
+    )).sort((a, b) => a - b);
 
     if (loadingState === 'loading') {
         return (
@@ -112,7 +112,7 @@ export function ProductDetail() {
     if (loadingState === 'error' || !notebook) {
         return (
             <div className="py-24">
-                <div className="max-w-7xl mx-auto px-6 lg:px-8">
+                <div className="max-w-7xl mx-auto px-8 lg:px-12">
                     <EmptyState
                         title="Product not found"
                         description="The requested product could not be found."
@@ -122,7 +122,7 @@ export function ProductDetail() {
                         }}
                     />
                 </div>
-        </div>
+            </div>
         );
     }
 
@@ -130,7 +130,7 @@ export function ProductDetail() {
         <div className="min-h-screen bg-ivory">
             {/* Breadcrumb */}
             <section className="py-8 bg-white border-b border-warm-gray">
-                <div className="max-w-7xl mx-auto px-6 lg:px-8">
+                <div className="max-w-7xl mx-auto px-8 lg:px-12">
                     <nav className="text-sm text-graphite" aria-label="Breadcrumb">
                         <Link to="/" className="hover:text-charcoal transition-colors">Home</Link>
                         <span className="mx-3">{'>'}</span>
@@ -147,7 +147,7 @@ export function ProductDetail() {
 
             {/* Product Display */}
             <section className="py-16">
-                <div className="max-w-7xl mx-auto px-6 lg:px-8">
+                <div className="max-w-7xl mx-auto px-8 lg:px-12">
                     <div className="grid lg:grid-cols-2 gap-16">
                         {/* Cover Images */}
                         <motion.div
@@ -158,40 +158,14 @@ export function ProductDetail() {
                             <div className="relative">
                                 {/* Main cover display */}
                                 <div className="aspect-notebook bg-white rounded-3xl overflow-hidden shadow-heavy border border-warm-gray">
-                                    <AnimatePresence mode="wait">
-                                        <motion.img
-                                            key={showBackCover ? 'back' : 'front'}
-                                            src={showBackCover ? backCover : frontCover}
-                                            alt={`${notebook.name} ${showBackCover ? 'back' : 'front'} cover`}
-                                            className="w-full h-full object-cover"
-                                            initial={{ opacity: 0 }}
-                                            animate={{ opacity: 1 }}
-                                            exit={{ opacity: 0 }}
-                                            transition={{ duration: 0.3 }}
-                                        />
-                                    </AnimatePresence>
-                                </div>
-
-                                {/* Cover toggle */}
-                                <div className="flex gap-3 mt-6 justify-center">
-                                    <button
-                                        onClick={() => setShowBackCover(false)}
-                                        className={`px-5 py-3 rounded-xl font-medium transition-all ${!showBackCover
-                                            ? 'bg-charcoal text-white shadow-medium'
-                                            : 'bg-white text-charcoal hover:bg-warm-gray border border-warm-gray'
-                                            }`}
-                                    >
-                                        Front Cover
-                                    </button>
-                                    <button
-                                        onClick={() => setShowBackCover(true)}
-                                        className={`px-5 py-3 rounded-xl font-medium transition-all ${showBackCover
-                                            ? 'bg-charcoal text-white shadow-medium'
-                                            : 'bg-white text-charcoal hover:bg-warm-gray border border-warm-gray'
-                                            }`}
-                                    >
-                                        Back Cover
-                                    </button>
+                                    <motion.img
+                                        src={mainImage}
+                                        alt={`${notebook.name} cover`}
+                                        className="w-full h-full object-cover"
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        transition={{ duration: 0.3 }}
+                                    />
                                 </div>
                             </div>
                         </motion.div>
@@ -241,12 +215,18 @@ export function ProductDetail() {
                                         </div>
                                     </div>
                                     <div className="py-4 flex justify-between items-center px-2">
+                                        <div className="text-xs font-bold text-graphite/50 uppercase">Paper Weight</div>
+                                        <div className="text-lg font-bold text-charcoal">
+                                            {uniqueGSMs.length > 0 ? uniqueGSMs.join(', ') : 'N/A'} <span className="text-xs font-normal opacity-60">GSM</span>
+                                        </div>
+                                    </div>
+                                    <div className="py-4 flex justify-between items-center px-2">
                                         <div className="text-xs font-bold text-graphite/50 uppercase">Price Range</div>
                                         <div className="text-lg font-bold text-amber-700">
                                             {notebook.variants?.length > 0 ? (
                                                 <div className="flex flex-col items-end">
-                                                    <span>Rs. {notebook.variants[0]?.price_per_dozen} - {notebook.variants[notebook.variants.length - 1]?.price_per_dozen}</span>
-                                                    <span className="text-[10px] text-graphite/50 font-bold uppercase -mt-1">+ VAT (Per Dozen)</span>
+                                                    <span>Rs. {notebook.variants[0]?.price_per_unit} - {notebook.variants[notebook.variants.length - 1]?.price_per_unit}</span>
+                                                    <span className="text-[10px] text-graphite/50 font-bold uppercase -mt-1">+ VAT (Per Unit)</span>
                                                 </div>
                                             ) : 'Price on request'}
                                         </div>
@@ -314,7 +294,7 @@ export function ProductDetail() {
             {/* Rulings Showcase Section */}
             {notebook.variants && notebook.variants.length > 0 && (
                 <section className="py-24 bg-white border-t border-warm-gray overflow-hidden">
-                    <div className="max-w-7xl mx-auto px-6 lg:px-8">
+                    <div className="max-w-7xl mx-auto px-8 lg:px-12">
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}

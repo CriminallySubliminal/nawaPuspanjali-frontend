@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { NotebookService } from '../services/notebooks.service';
@@ -71,12 +71,15 @@ export function Products() {
                     setFilterOptions(optionsRes.data);
                     setNotebooks(notebooksRes.data);
 
-                    // Set initial brand if provided in URL
-                    if (brandParam) {
-                        const brand = optionsRes.data.brands.find(b => b.slug === brandParam);
-                        if (brand) {
-                            setSelectedBrandId(brand.id);
-                        }
+                    // Set initial brand: URL param takes priority, otherwise first brand
+                    const urlBrand = brandParam ? optionsRes.data.brands.find(b => b.slug === brandParam) : null;
+                    if (urlBrand) {
+                        setSelectedBrandId(urlBrand.id);
+                    } else if (optionsRes.data.brands.length > 0) {
+                        const firstBrand = optionsRes.data.brands[0];
+                        setSelectedBrandId(firstBrand.id);
+                        // Update query param for consistency
+                        setSearchParams({ brand: firstBrand.slug }, { replace: true });
                     }
 
                     setLoadingState('success');
@@ -122,7 +125,6 @@ export function Products() {
 
     const availableSizes = useMemo(() => {
         if (!filterOptions) return [];
-        if (!selectedBrandId && !selectedTypeId) return filterOptions.sizes;
 
         const sizesMap = new Map();
         notebooks.forEach(n => {
@@ -142,6 +144,32 @@ export function Products() {
         });
         return Array.from(sizesMap.values()).sort((a, b) => a.display_order - b.display_order);
     }, [notebooks, selectedBrandId, selectedTypeId, filterOptions]);
+
+    // Auto-select first type when available types change
+    useEffect(() => {
+        if (availableTypes.length > 0) {
+            // If current selection is not in available types, pick first
+            const isCurrentTypeAvailable = availableTypes.some(t => String(t.id) === String(selectedTypeId));
+            if (!isCurrentTypeAvailable) {
+                setSelectedTypeId(availableTypes[0].id);
+            }
+        } else {
+            setSelectedTypeId(null);
+        }
+    }, [availableTypes, selectedTypeId]);
+
+    // Auto-select first size when available sizes change
+    useEffect(() => {
+        if (availableSizes.length > 0) {
+            // If current selection is not in available sizes, pick first
+            const isCurrentSizeAvailable = availableSizes.some(s => String(s.id) === String(selectedSizeId));
+            if (!isCurrentSizeAvailable) {
+                setSelectedSizeId(availableSizes[0].id);
+            }
+        } else {
+            setSelectedSizeId(null);
+        }
+    }, [availableSizes, selectedSizeId]);
 
     if (loadingState === 'loading' && !filterOptions) {
         return <div className="py-24"><LoadingSpinner message="Loading products..." /></div>;
@@ -165,7 +193,7 @@ export function Products() {
         <div className="min-h-screen bg-ivory pb-24">
             {/* Header / Breadcrumb */}
             <section className="bg-white border-b border-warm-gray py-8">
-                <div className="max-w-7xl mx-auto px-6 lg:px-8">
+                <div className="max-w-7xl mx-auto px-8 lg:px-12">
                     <nav className="text-sm text-graphite mb-4" aria-label="Breadcrumb">
                         <Link to="/" className="hover:text-charcoal transition-colors">Home</Link>
                         <span className="mx-3">{'>'}</span>
@@ -177,7 +205,7 @@ export function Products() {
 
             {/* Selection UI */}
             <section className="py-12">
-                <div className="max-w-7xl mx-auto px-6 lg:px-8">
+                <div className="max-w-7xl mx-auto px-8 lg:px-12">
                     <div className="flex flex-col gap-10">
 
                         {/* 1. Brand Selector (Horizontal scroll with buttons) */}
@@ -226,32 +254,18 @@ export function Products() {
                                     WebkitOverflowScrolling: 'touch'
                                 }}
                             >
-                                <button
-                                    onClick={() => {
-                                        setSelectedBrandId(null);
-                                        setSelectedTypeId(null);
-                                        setSelectedSizeId(null);
-                                        // Clear query param
-                                        setSearchParams({}, { replace: true });
-                                    }}
-                                    className={`px-6 py-2.5 rounded-full font-bold transition-all whitespace-nowrap shadow-sm border flex-shrink-0 ${selectedBrandId === null
-                                        ? 'bg-charcoal text-white border-charcoal scale-105 z-20'
-                                        : 'bg-white text-charcoal border-warm-gray hover:border-charcoal/30'
-                                        }`}
-                                >
-                                    All Brands
-                                </button>
                                 {filterOptions?.brands?.map((brand) => (
                                     <button
                                         key={brand.id}
                                         onClick={() => {
                                             setSelectedBrandId(brand.id);
+                                            // Reset children to trigger auto-select
                                             setSelectedTypeId(null);
                                             setSelectedSizeId(null);
                                             // Update query param
                                             setSearchParams({ brand: brand.slug }, { replace: true });
                                         }}
-                                        className={`px-6 py-2.5 rounded-full font-bold transition-all whitespace-nowrap shadow-sm border flex-shrink-0 ${String(selectedBrandId) === String(brand.id)
+                                        className={`w-40 md:w-48 py-2.5 rounded-sm font-bold transition-all whitespace-nowrap shadow-sm border flex-shrink-0 flex items-center justify-center ${String(selectedBrandId) === String(brand.id)
                                             ? 'bg-charcoal text-white border-charcoal scale-105 z-20'
                                             : 'bg-white text-charcoal border-warm-gray hover:border-charcoal/30'
                                             }`}
@@ -277,25 +291,37 @@ export function Products() {
                         )}
 
                         {/* 2. Selectors Grid */}
-                        <div className="bg-white/50 backdrop-blur-sm rounded-[2.5rem] p-10 border border-white/20 shadow-medium max-w-5xl mx-auto w-full">
-                            <div className="space-y-10">
+                        <div className="bg-white/50 backdrop-blur-sm rounded-[1.5rem] md:rounded-[2.5rem] p-6 md:p-10 border border-white/20 shadow-medium max-w-5xl mx-auto w-full">
+                            <div className="space-y-6 md:space-y-10">
                                 {/* Notebook Type */}
                                 {(!selectedBrandId || availableTypes.length > 0) && (
-                                    <div className="flex flex-col md:flex-row md:items-center gap-6">
-                                        <label className="text-lg font-bold text-charcoal min-w-[180px]">Select Type:</label>
-                                        <div className="flex flex-wrap gap-3">
-                                            <button
-                                                onClick={() => {
-                                                    setSelectedTypeId(null);
+                                    <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-6">
+                                        <label className="text-base md:text-lg font-bold text-charcoal min-w-[180px]">Select Type:</label>
+
+                                        {/* Mobile Dropdown */}
+                                        <div className="md:hidden relative">
+                                            <select
+                                                value={selectedTypeId || ''}
+                                                onChange={(e) => {
+                                                    const val = e.target.value;
+                                                    setSelectedTypeId(val ? Number(val) : null);
                                                     setSelectedSizeId(null);
                                                 }}
-                                                className={`px-6 py-2.5 rounded-xl font-medium transition-all border ${selectedTypeId === null
-                                                    ? 'bg-charcoal text-white border-charcoal shadow-sm'
-                                                    : 'bg-white text-charcoal border-warm-gray hover:bg-ivory'
-                                                    }`}
+                                                className="w-full bg-white border-2 border-warm-gray-dark/50 rounded-xl px-4 py-3 text-sm font-medium text-charcoal outline-none focus:border-charcoal transition-all appearance-none pr-10"
                                             >
-                                                All Types
-                                            </button>
+                                                {availableTypes.map((type) => (
+                                                    <option key={type.id} value={type.id}>
+                                                        {type.name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-charcoal/50">
+                                                <ChevronDown size={18} />
+                                            </div>
+                                        </div>
+
+                                        {/* Desktop Buttons */}
+                                        <div className="hidden md:flex flex-wrap gap-4">
                                             {availableTypes.map((type) => (
                                                 <button
                                                     key={type.id}
@@ -303,9 +329,9 @@ export function Products() {
                                                         setSelectedTypeId(type.id);
                                                         setSelectedSizeId(null);
                                                     }}
-                                                    className={`px-6 py-2.5 rounded-xl font-medium transition-all border ${String(selectedTypeId) === String(type.id)
+                                                    className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all border-2 ${String(selectedTypeId) === String(type.id)
                                                         ? 'bg-charcoal text-white border-charcoal shadow-sm'
-                                                        : 'bg-white text-charcoal border-warm-gray hover:bg-ivory'
+                                                        : 'bg-white text-charcoal/80 border-warm-gray-dark hover:border-charcoal/30 hover:bg-warm-gray/10'
                                                         }`}
                                                 >
                                                     {type.name}
@@ -317,28 +343,39 @@ export function Products() {
 
                                 {/* Size */}
                                 {availableSizes.length > 0 && (
-                                    <div className="flex flex-col md:flex-row md:items-center gap-6">
-                                        <label className="text-lg font-bold text-charcoal min-w-[180px]">Select Size:</label>
-                                        <div className="flex flex-wrap gap-3">
-                                            <button
-                                                onClick={() => setSelectedSizeId(null)}
-                                                className={`px-6 py-2.5 rounded-xl font-medium transition-all border ${selectedSizeId === null
-                                                    ? 'bg-charcoal text-white border-charcoal shadow-sm'
-                                                    : 'bg-white text-charcoal border-warm-gray hover:bg-ivory'
-                                                    }`}
+                                    <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-6">
+                                        <label className="text-base md:text-lg font-bold text-charcoal min-w-[180px]">Select Size:</label>
+
+                                        {/* Mobile Dropdown */}
+                                        <div className="md:hidden relative">
+                                            <select
+                                                value={selectedSizeId || ''}
+                                                onChange={(e) => setSelectedSizeId(e.target.value ? Number(e.target.value) : null)}
+                                                className="w-full bg-white border-2 border-warm-gray-dark/50 rounded-xl px-4 py-3 text-sm font-medium text-charcoal outline-none focus:border-charcoal transition-all appearance-none pr-10"
                                             >
-                                                All Sizes
-                                            </button>
+                                                {availableSizes.map((size) => (
+                                                    <option key={size.id} value={size.id}>
+                                                        {size.name} ({size.width}x{size.height} {size.unit})
+                                                    </option>
+                                                ))}
+                                            </select>
+                                            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-charcoal/50">
+                                                <ChevronDown size={18} />
+                                            </div>
+                                        </div>
+
+                                        {/* Desktop Buttons */}
+                                        <div className="hidden md:flex flex-wrap gap-4">
                                             {availableSizes.map((size) => (
                                                 <button
                                                     key={size.id}
                                                     onClick={() => setSelectedSizeId(size.id)}
-                                                    className={`px-6 py-2.5 rounded-xl font-medium transition-all border ${String(selectedSizeId) === String(size.id)
+                                                    className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all border-2 ${String(selectedSizeId) === String(size.id)
                                                         ? 'bg-charcoal text-white border-charcoal shadow-sm'
-                                                        : 'bg-white text-charcoal border-warm-gray hover:bg-ivory'
+                                                        : 'bg-white text-charcoal/80 border-warm-gray-dark hover:border-charcoal/30 hover:bg-warm-gray/10'
                                                         }`}
                                                 >
-                                                    {size.name}
+                                                    {size.name} <span className="text-[10px] opacity-60 ml-1 font-normal">({size.width}x{size.height} {size.unit})</span>
                                                 </button>
                                             ))}
                                         </div>
@@ -348,23 +385,62 @@ export function Products() {
                         </div>
                     </div>
 
-                    {/* Results Grid */}
+                    {/* Results Grid / Mobile Scroll */}
                     <div className="mt-8">
                         <AnimatePresence mode="popLayout">
                             {loadingState === 'loading' && notebooks.length === 0 ? (
                                 <div className="py-24"><LoadingSpinner message="Loading products..." /></div>
                             ) : filteredResults.length > 0 ? (
-                                <motion.div
-                                    layout
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    exit={{ opacity: 0 }}
-                                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
-                                >
-                                    {filteredResults.map((notebook) => (
-                                        <NotebookCard key={notebook.id} notebook={notebook} />
-                                    ))}
-                                </motion.div>
+                                <>
+                                    {/* Desktop Grid (Hidden on Mobile) */}
+                                    <motion.div
+                                        layout
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                        className="hidden lg:grid grid-cols-3 xl:grid-cols-5 gap-5"
+                                    >
+                                        {filteredResults.map((notebook) => (
+                                            <NotebookCard key={notebook.id} notebook={notebook} />
+                                        ))}
+                                    </motion.div>
+
+                                    {/* Mobile Horizontal Scroll (Hidden on Desktop) */}
+                                    <div className="lg:hidden -mx-8 px-8 flex flex-col gap-4 overflow-hidden">
+                                        <div className="flex justify-between items-center mb-2 px-2">
+                                            <span className="text-xs font-bold text-graphite uppercase tracking-widest">
+                                                {filteredResults.length} Items
+                                            </span>
+                                            <div className="flex items-center gap-1.5 text-[10px] text-graphite animate-pulse">
+                                                <span>Scroll horizontally</span>
+                                                <ChevronRight size={12} />
+                                            </div>
+                                        </div>
+
+                                        <motion.div
+                                            layout
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            className="flex gap-3 overflow-x-auto pb-6 snap-x no-scrollbar"
+                                            style={{
+                                                scrollbarWidth: 'none',
+                                                msOverflowStyle: 'none',
+                                                WebkitOverflowScrolling: 'touch'
+                                            }}
+                                        >
+                                            {filteredResults.map((notebook) => (
+                                                <div key={notebook.id} className="snap-start flex-shrink-0">
+                                                    <NotebookCard
+                                                        notebook={notebook}
+                                                        variant="compact"
+                                                    />
+                                                </div>
+                                            ))}
+                                            {/* Extra spacing for last item */}
+                                            <div className="w-8 flex-shrink-0" />
+                                        </motion.div>
+                                    </div>
+                                </>
                             ) : (
                                 <motion.div
                                     initial={{ opacity: 0 }}

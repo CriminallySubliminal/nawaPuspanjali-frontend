@@ -97,7 +97,7 @@ export function Sizes() {
     if (loading === 'error') {
         return (
             <div className="py-24">
-                <div className="max-w-7xl mx-auto px-6 lg:px-8">
+                <div className="max-w-7xl mx-auto px-8 lg:px-12">
                     <EmptyState
                         title="Something went wrong"
                         description={error || 'The requested content could not be found.'}
@@ -118,7 +118,7 @@ export function Sizes() {
             <section
                 className="py-16 lg:py-20 bg-gradient-to-br from-warm-gray to-white"
             >
-                <div className="max-w-7xl mx-auto px-6 lg:px-8">
+                <div className="max-w-7xl mx-auto px-8 lg:px-12">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -152,7 +152,7 @@ export function Sizes() {
 
             {/* Size Selection & Notebooks */}
             <section className="py-12 bg-ivory">
-                <div className="max-w-7xl mx-auto px-6 lg:px-8">
+                <div className="max-w-7xl mx-auto px-8 lg:px-12">
                     {/* Size Selector */}
                     {loading === 'loading' ? (
                         <LoadingSpinner message="Loading sizes..." size="sm" />

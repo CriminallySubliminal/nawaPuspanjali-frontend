@@ -9,7 +9,7 @@ export function Contact() {
         <div className="min-h-screen">
             {/* Header */}
             <section className="bg-ivory py-16 lg:py-20">
-                <div className="max-w-7xl mx-auto px-6 lg:px-8">
+                <div className="max-w-7xl mx-auto px-8 lg:px-12">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -32,7 +32,7 @@ export function Contact() {
 
             {/* Content */}
             <section className="py-16 bg-ivory">
-                <div className="max-w-5xl mx-auto px-6 lg:px-8">
+                <div className="max-w-5xl mx-auto px-8 lg:px-12">
                     <div className="grid md:grid-cols-2 gap-12">
                         {/* Contact Info */}
                         <motion.div

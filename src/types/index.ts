@@ -24,6 +24,9 @@ export interface Size {
     id: number;
     name: string;
     slug: string;
+    width: number;
+    height: number;
+    unit: string;
     display_order: number;
 }
 
@@ -47,11 +50,8 @@ export interface NotebookVariant {
     notebook_type: NotebookType;
     size: Size;
     ruling: Ruling;
-    no_of_pages: number;
-    price_per_dozen: string; // Decimal comes as string from DRF
-    price_per_unit: string;
-    front_cover?: string;
-    back_cover?: string;
+    gsm: number;
+    price_per_unit: string; // Decimal comes as string from DRF
     full_description?: string;
     display_name: string;
     is_active: boolean;
@@ -68,6 +68,7 @@ export interface Notebook {
     slug: string;
     brand: Brand;
     notebook_type: NotebookType;
+    image: string;
     base_description: string;
     is_active: boolean;
     variants: NotebookVariant[];

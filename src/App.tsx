@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Layout } from './components/layout/Layout';
 import { Landing } from './pages/Landing';
-import { BrandNotebooks } from './pages/BrandNotebooks';
+// import { BrandNotebooks } from './pages/BrandNotebooks';
 import { ProductDetail } from './pages/ProductDetail';
 import { Sizes } from './pages/Sizes';
 import { Products } from './pages/Products';
@@ -21,7 +21,7 @@ function App() {
           <Route path="/" element={<Landing />} />
           <Route path="/products" element={<Products />} />
           <Route path="/brands" element={<Navigate to="/products" replace />} />
-          <Route path="/brands/:brandSlug/notebooks" element={<BrandNotebooks />} />
+          {/* <Route path="/brands/:brandSlug/notebooks" element={<BrandNotebooks />} /> */}
           <Route path="/brands/:brandSlug/sizes" element={<Sizes />} />
           <Route path="/notebooks/:notebookSlug" element={<ProductDetail />} />
           <Route path="/about" element={<About />} />
