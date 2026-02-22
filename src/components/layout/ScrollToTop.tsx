@@ -6,15 +6,23 @@ import { useLocation } from 'react-router-dom';
  * This is used to ensure that navigating to a new page starts at the top of the scroll.
  */
 export function ScrollToTop() {
-    const { pathname } = useLocation();
+    const { pathname, hash } = useLocation();
 
     useEffect(() => {
+        if (hash) {
+            const element = document.getElementById(hash.replace('#', ''));
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+                return;
+            }
+        }
+
         window.scrollTo({
             top: 0,
             left: 0,
-            behavior: 'smooth' // Using 'instant' to avoid flashing or smooth scroll delays on navigation
+            behavior: 'smooth'
         });
-    }, [pathname]);
+    }, [pathname, hash]);
 
     return null;
 }

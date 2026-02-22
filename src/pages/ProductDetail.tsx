@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { Notebook, LoadingState } from '../types';
@@ -7,10 +7,11 @@ import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 import { EmptyState } from '../components/ui/EmptyState';
 
 // Ruling Images
-import twoLinedImg from '../assets/images/rulings/2-Lined.jpg';
-import fourLinedImg from '../assets/images/rulings/4-Lined.jfif';
-import graphImg from '../assets/images/rulings/Graph.jpg';
-import spiralImg from '../assets/images/rulings/Spiral.jpg';
+import twoLinedImg from '../assets/images/rulings/2-Lined.png';
+import fourLinedImg from '../assets/images/rulings/4-Lined.png';
+import graphImg from '../assets/images/rulings/Graph.png';
+import gridImg from '../assets/images/rulings/Grid.png';
+import spiralImg from '../assets/images/rulings/Spiral.png';
 import blankImg from '../assets/images/rulings/blank.avif';
 
 /**
@@ -20,10 +21,15 @@ import blankImg from '../assets/images/rulings/blank.avif';
 export function ProductDetail() {
     const { notebookSlug } = useParams<{ notebookSlug: string }>();
     const navigate = useNavigate();
+    const rulingsSectionRef = useRef<HTMLElement>(null);
 
     const [notebook, setNotebook] = useState<Notebook | null>(null);
     const [loadingState, setLoadingState] = useState<LoadingState>('idle');
     const [selectedRuling, setSelectedRuling] = useState<{ name: string, image: string } | null>(null);
+
+    const scrollToRulings = () => {
+        rulingsSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
 
     useEffect(() => {
         const fetchNotebook = async () => {
@@ -92,14 +98,11 @@ export function ProductDetail() {
     const variantTable = notebook ? getVariantTable() : [];
     const mainImage = notebook?.image || '/placeholder-notebook.jpg';
 
-    // Derive unique sizes, rulings, and GSM from variants for technical specifications
+    // Derive unique sizes and rulings from variants for technical specifications
     const derivedSizes = variantTable.map(group => group.size);
     const derivedRulings = Array.from(new Set(
         notebook?.variants?.map(v => v.ruling.name) || []
     ));
-    const uniqueGSMs = Array.from(new Set(
-        notebook?.variants?.map(v => v.gsm) || []
-    )).sort((a, b) => a - b);
 
     if (loadingState === 'loading') {
         return (
@@ -146,22 +149,22 @@ export function ProductDetail() {
             </section>
 
             {/* Product Display */}
-            <section className="py-16">
-                <div className="max-w-7xl mx-auto px-8 lg:px-12">
-                    <div className="grid lg:grid-cols-2 gap-16">
-                        {/* Cover Images */}
+            <section className="py-8 md:py-12">
+                <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
+                    <div className="grid grid-cols-1 lg:grid-cols-[2fr_3fr] gap-8 lg:gap-12">
+                        {/* Cover Image - Smaller & Transparent */}
                         <motion.div
                             initial={{ opacity: 0, x: -30 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.5 }}
+                            className="flex items-start justify-center lg:sticky lg:top-8"
                         >
-                            <div className="relative">
-                                {/* Main cover display */}
-                                <div className="aspect-notebook bg-white rounded-3xl overflow-hidden shadow-heavy border border-warm-gray">
+                            <div className="relative w-full max-w-xs lg:max-w-sm">
+                                <div className="aspect-[3/4] rounded-2xl overflow-hidden">
                                     <motion.img
                                         src={mainImage}
                                         alt={`${notebook.name} cover`}
-                                        className="w-full h-full object-cover"
+                                        className="w-full h-full object-contain"
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
                                         transition={{ duration: 0.3 }}
@@ -176,29 +179,26 @@ export function ProductDetail() {
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.5, delay: 0.1 }}
                         >
-                            <div className="mb-10">
-                                <span className="inline-block bg-amber-100 text-amber-800 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest mb-6">
+                            <div className="mb-6">
+                                <span className="inline-block bg-amber-100 text-amber-800 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest mb-4">
                                     {notebook.brand?.name || 'Puspanjali'}
                                 </span>
-                                <h1 className="text-4xl md:text-5xl font-bold text-charcoal mb-6 leading-tight">{notebook.name}</h1>
-                                {notebook.base_description && (
-                                    <p className="text-xl text-graphite leading-relaxed mb-10">
-                                        {notebook.base_description}
-                                    </p>
-                                )}
+                                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-charcoal leading-tight whitespace-nowrap overflow-hidden text-ellipsis">{notebook.name}</h1>
                             </div>
 
-                            {/* Technical Specifications */}
-                            <div className="bg-white rounded-[2rem] p-8 shadow-medium border border-warm-gray mb-10 overflow-hidden">
-                                <h2 className="text-sm font-bold text-charcoal mb-6 uppercase tracking-widest text-amber-600 px-2">Technical Specifications</h2>
-                                <div className="divide-y divide-warm-gray-dark/10">
-                                    <div className="py-4 flex justify-between items-center px-2">
-                                        <div className="text-xs font-bold text-graphite/50 uppercase">Notebook Type</div>
-                                        <div className="text-lg font-bold text-charcoal">{notebook.notebook_type?.name || 'Notebook'}</div>
+                            {/* Technical Specifications - Clean x:y format */}
+                            <div className="mb-6">
+                                <h2 className="text-xs font-bold mb-4 uppercase tracking-widest text-amber-600">Technical Specifications</h2>
+                                <div className="space-y-3">
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-sm font-semibold text-charcoal/60 uppercase tracking-wide min-w-[130px]">Type</span>
+                                        <span className="text-sm text-charcoal/40">:</span>
+                                        <span className="text-base font-bold text-charcoal">{notebook.notebook_type?.name || 'Notebook'}</span>
                                     </div>
-                                    <div className="py-4 flex justify-between items-start px-2">
-                                        <div className="text-xs font-bold text-graphite/50 uppercase pt-2">Available Sizes</div>
-                                        <div className="flex flex-wrap gap-2 justify-end max-w-[60%]">
+                                    <div className="flex items-start gap-3">
+                                        <span className="text-sm font-semibold text-charcoal/60 uppercase tracking-wide min-w-[130px] pt-0.5">Sizes</span>
+                                        <span className="text-sm text-charcoal/40 pt-0.5">:</span>
+                                        <div className="flex flex-wrap gap-2">
                                             {derivedSizes.length > 0 ? derivedSizes.map(sizeName => (
                                                 <span key={sizeName} className="text-sm font-bold text-charcoal bg-ivory px-3 py-1 rounded-lg border border-warm-gray-dark/20 shadow-sm">
                                                     {sizeName}
@@ -208,68 +208,47 @@ export function ProductDetail() {
                                             )}
                                         </div>
                                     </div>
-                                    <div className="py-4 flex justify-between items-center px-2">
-                                        <div className="text-xs font-bold text-graphite/50 uppercase">Ruling Styles</div>
-                                        <div className="text-lg font-bold text-charcoal text-right">
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-sm font-semibold text-charcoal/60 uppercase tracking-wide min-w-[130px]">Rulings</span>
+                                        <span className="text-sm text-charcoal/40">:</span>
+                                        <span className="text-base font-bold text-charcoal">
                                             {derivedRulings.length > 0 ? derivedRulings.join(', ') : 'N/A'}
-                                        </div>
+                                        </span>
+                                        {/* Info icon with ripple - scrolls to rulings section */}
+                                        <button
+                                            onClick={scrollToRulings}
+                                            className="relative ml-1 w-6 h-6 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center text-xs font-bold hover:bg-amber-200 transition-colors cursor-pointer flex-shrink-0"
+                                            title="View ruling samples"
+                                            aria-label="View ruling samples"
+                                        >
+                                            <span className="relative z-10">i</span>
+                                            <span className="absolute inset-0 rounded-full bg-amber-300/50 animate-[ripple_2s_ease-out_infinite]" />
+                                        </button>
                                     </div>
-                                    <div className="py-4 flex justify-between items-center px-2">
-                                        <div className="text-xs font-bold text-graphite/50 uppercase">Paper Weight</div>
-                                        <div className="text-lg font-bold text-charcoal">
-                                            {uniqueGSMs.length > 0 ? uniqueGSMs.join(', ') : 'N/A'} <span className="text-xs font-normal opacity-60">GSM</span>
-                                        </div>
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-sm font-semibold text-charcoal/60 uppercase tracking-wide min-w-[130px]">Paper</span>
+                                        <span className="text-sm text-charcoal/40">:</span>
+                                        <span className="text-base font-bold text-charcoal">
+                                            {notebook.brand?.paper || 'Standard'} Paper
+                                        </span>
                                     </div>
-                                    <div className="py-4 flex justify-between items-center px-2">
-                                        <div className="text-xs font-bold text-graphite/50 uppercase">Price Range</div>
-                                        <div className="text-lg font-bold text-amber-700">
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-sm font-semibold text-charcoal/60 uppercase tracking-wide min-w-[130px]">Price</span>
+                                        <span className="text-sm text-charcoal/40">:</span>
+                                        <span className="text-base font-bold text-amber-700">
                                             {notebook.variants?.length > 0 ? (
-                                                <div className="flex flex-col items-end">
-                                                    <span>Rs. {notebook.variants[0]?.price_per_unit} - {notebook.variants[notebook.variants.length - 1]?.price_per_unit}</span>
-                                                    <span className="text-[10px] text-graphite/50 font-bold uppercase -mt-1">+ VAT (Per Unit)</span>
-                                                </div>
+                                                <>MRP Rs. {notebook.variants[0]?.price_per_unit}</>
                                             ) : 'Price on request'}
-                                        </div>
+                                        </span>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Variant Grid / Details */}
-                            {/* <div className="mb-12">
-                                <h2 className="text-sm font-bold text-charcoal mb-6 uppercase tracking-widest text-amber-600">Available Combinations</h2>
-                                <div className="space-y-4">
-                                    {variantTable.map((sizeGroup) => (
-                                        <div key={sizeGroup.size} className="bg-ivory/50 rounded-2xl p-6 border border-warm-gray-dark/10">
-                                            <h3 className="text-lg font-bold text-charcoal mb-4 flex items-center gap-3">
-                                                <span className="w-8 h-8 rounded-full bg-charcoal text-white flex items-center justify-center text-xs">
-                                                    {sizeGroup.size}
-                                                </span>
-                                                Size Variants
-                                            </h3>
-                                            <div className="grid sm:grid-cols-2 gap-4">
-                                                {sizeGroup.rulings.map((rulingData) => (
-                                                    <div key={rulingData.ruling} className="bg-white p-4 rounded-xl shadow-sm border border-warm-gray-dark/5 flex justify-between items-center group hover:border-amber-500/30 transition-colors">
-                                                        <div>
-                                                            <div className="font-bold text-charcoal group-hover:text-amber-600 transition-colors">{rulingData.ruling}</div>
-                                                            <div className="text-sm text-graphite">{rulingData.pages} Pages</div>
-                                                        </div>
-                                                        <div className="text-right">
-                                                            <div className="text-amber-700 font-bold">Rs. {rulingData.price}</div>
-                                                            <div className="text-[10px] text-graphite/50 uppercase font-bold">Per Dozen</div>
-                                                        </div>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div> */}
-
                             {/* CTA / Contact */}
-                            <div className="flex flex-col gap-4">
+                            <div className="flex flex-col gap-3">
                                 <Link
                                     to="/contact"
-                                    className="inline-flex items-center justify-center gap-3 bg-charcoal text-white py-4 rounded-xl font-bold hover:bg-charcoal-light transition-all shadow-medium"
+                                    className="inline-flex items-center justify-center gap-3 bg-charcoal text-white py-3.5 rounded-xl font-bold hover:bg-charcoal-light transition-all shadow-medium"
                                 >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -288,26 +267,33 @@ export function ProductDetail() {
                             </div>
                         </motion.div>
                     </div>
+
+                    {/* Description - full width, lighter grey */}
+                    {notebook.base_description && (
+                        <p className="text-base text-graphite/50 leading-relaxed mt-8 max-w-4xl">
+                            {notebook.base_description}
+                        </p>
+                    )}
                 </div>
             </section>
 
-            {/* Rulings Showcase Section */}
+            {/* Rulings Showcase Section - Shifted up */}
             {notebook.variants && notebook.variants.length > 0 && (
-                <section className="py-24 bg-white border-t border-warm-gray overflow-hidden">
-                    <div className="max-w-7xl mx-auto px-8 lg:px-12">
+                <section ref={rulingsSectionRef} id="rulings-section" className="py-8 md:py-10 overflow-hidden scroll-mt-4">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
-                            className="text-center mb-16"
+                            className="text-center mb-8"
                         >
-                            <h2 className="text-3xl font-bold text-charcoal mb-4">Notebook Rulings</h2>
-                            <p className="text-graphite text-lg max-w-2xl mx-auto">
+                            <h2 className="text-2xl font-bold text-charcoal mb-2">Notebook Rulings</h2>
+                            <p className="text-graphite/60 text-base max-w-2xl mx-auto">
                                 Available ruling styles for {notebook.name}
                             </p>
                         </motion.div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
                             {(() => {
                                 // Extract unique rulings for this notebook
                                 const uniqueRulings = Array.from(
@@ -323,10 +309,10 @@ export function ProductDetail() {
                                             whileInView={{ opacity: 1, scale: 1 }}
                                             viewport={{ once: true }}
                                             transition={{ duration: 0.5, delay: idx * 0.1 }}
-                                            className="group bg-white rounded-3xl p-5 overflow-hidden border border-warm-gray-dark/10 hover:shadow-heavy transition-all duration-500 z-10 "
+                                            className="group bg-white rounded-2xl p-3 overflow-hidden border border-warm-gray-dark/10 hover:shadow-heavy transition-all duration-500"
                                         >
                                             <div
-                                                className="aspect-square w-full overflow-hidden bg-white border-b border-warm-gray/50 cursor-pointer"
+                                                className="aspect-square w-full overflow-hidden bg-ivory/30 rounded-xl cursor-pointer"
                                                 onClick={() => setSelectedRuling({ name: ruling.name, image: rulingImage })}
                                             >
                                                 <img
@@ -335,8 +321,8 @@ export function ProductDetail() {
                                                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                                                 />
                                             </div>
-                                            <div className="p-6 text-center">
-                                                <h3 className="text-lg font-bold text-charcoal">{ruling.name}</h3>
+                                            <div className="py-3 text-center">
+                                                <h3 className="text-sm font-bold text-charcoal">{ruling.name}</h3>
                                             </div>
                                         </motion.div>
                                     );
@@ -398,7 +384,8 @@ const rulingImages: Record<string, string> = {
     '4-lined': fourLinedImg,
     'graph': graphImg,
     'spiral': spiralImg,
-    'none': blankImg,
+    'grid': gridImg,
+    'plain': blankImg,
 };
 
 export default ProductDetail;

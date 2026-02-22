@@ -6,6 +6,7 @@ export interface Brand {
     name: string;
     slug: string;
     description?: string;
+    paper?: string;
 }
 
 /**

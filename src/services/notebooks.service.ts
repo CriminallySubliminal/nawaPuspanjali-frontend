@@ -88,7 +88,12 @@ export const NotebookService = {
 
             const response = await fetch(`${API_BASE_URL}/notebooks/?${queryParams.toString()}`);
             const result = await handleResponse<Notebook[]>(response);
-            if (result.success) return result;
+            if (result.success) {
+                // result.data.forEach(notebook => {
+                //     notebook.image = `${notebook.image}?t=${Date.now()}`;
+                // });
+                return result;
+            }
             console.warn('getNotebooks API success false, falling back to mock data', result.message);
         } catch (error) {
             console.warn('getNotebooks fetch failed, falling back to mock data', error);

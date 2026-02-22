@@ -30,7 +30,7 @@ export function NotebookCard({ notebook, index = 0, variant = 'default' }: Noteb
                 {/* Cover image container */}
                 <div className={`relative overflow-hidden bg-warm-gray/30 rounded-md ${isCompact ? 'aspect-[3/4]' : 'aspect-[4/5]'}`}>
                     <motion.img
-                        src={notebook.image || '/placeholder-notebook.jpg'}
+                        src={notebook.image ? `${notebook.image}?t=${Date.now()}` : '/placeholder-notebook.jpg'}
                         alt={notebook.name}
                         className="absolute inset-0 w-full h-full object-cover"
                         initial={{ opacity: 0 }}

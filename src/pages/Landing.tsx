@@ -1,11 +1,15 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Marquee from 'react-fast-marquee';
 import Carousel from '../components/ui/Carousel';
 import CountUp from '../components/CountUp';
+import { AngledSlider } from '../components/lightswind/angled-slider';
+import { NotebookService } from '../services/notebooks.service';
+import type { Notebook } from '../types';
 // import { GlowingCards, GlowingCard } from '../components/lightswind/glowing-cards'; // Moved to UnifiedFeaturesSection
 import UnifiedFeaturesSection from '../components/layout/UnifiedFeaturesSection';
+import { About } from './About';
 import pathsalaLogo from '../assets/logos/pathsala.png';
 import puspanjaliPlusLogo from '../assets/logos/puspanjali_plus.png';
 import ruffLogo from '../assets/logos/ruff.png';
@@ -17,7 +21,48 @@ import bulletPlusLogo from '../assets/logos/bullet_plus.png';
  * Modern landing page with animated hero and feature sections.
  */
 export function Landing() {
+    const navigate = useNavigate();
     const [showAllDistricts, setShowAllDistricts] = useState(false);
+    const [brandedProducts, setBrandedProducts] = useState<Notebook[]>([]);
+
+    useEffect(() => {
+        const fetchBrandedProducts = async () => {
+            const res = await NotebookService.getNotebooks({});
+            if (res.success && res.data) {
+                // Get one item per brand
+                const brandMap = new Map<number, Notebook>();
+                res.data.forEach(notebook => {
+                    const brandId = notebook.brand?.id || (notebook.brand as unknown as number);
+                    if (!brandMap.has(brandId)) {
+                        brandMap.set(brandId, notebook);
+                    }
+                });
+                setBrandedProducts(Array.from(brandMap.values()));
+            }
+        };
+        fetchBrandedProducts();
+    }, []);
+
+    const sliderItems = brandedProducts.map(product => ({
+        id: product.id,
+        url: product.image,
+        title: product.name,
+        alt: product.name,
+        onClick: () => {
+            const params = new URLSearchParams();
+            if (product.brand) {
+                params.append('brand', product.brand.slug);
+            }
+            if (product.notebook_type) {
+                params.append('notebook_type', product.notebook_type.slug);
+            }
+            // If we have variants, we can also set the first size
+            if (product.available_sizes && product.available_sizes.length > 0) {
+                params.append('size', product.available_sizes[0].slug);
+            }
+            navigate(`/products?${params.toString()}`);
+        }
+    }));
     return (
         <div>
             {/* Hero Section */}
@@ -275,7 +320,7 @@ export function Landing() {
                             </svg>
                         </Link>
                         <Link
-                            to="/about"
+                            to="/#about"
                             className="inline-flex items-center gap-2 px-8 py-4 border-2 border-brand-deep/20 text-brand-deep font-semibold rounded-xl hover:bg-brand-deep/5 hover:border-brand-deep/40 backdrop-blur-sm transition-all duration-300"
                         >
                             Learn About Us
@@ -286,6 +331,31 @@ export function Landing() {
                 {/* Bottom Gradient Fade - taller for smoother blend */}
                 {/* <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-white via-white/80 to-transparent" /> */}
             </section>
+
+            {/* Featured Products Angled Slider */}
+            {sliderItems.length > 0 && (
+                <section className="bg-white">
+                    <div className="max-w-7xl mx-auto px-8 lg:px-12 pt-12">
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            className="text-center mb-0"
+                        >
+                            <h2 className="text-3xl md:text-4xl font-bold text-charcoal">
+                                Featured Collections
+                            </h2>
+                        </motion.div>
+                    </div>
+                    <AngledSlider
+                        items={sliderItems}
+                        speed={10}
+                        angle={15}
+                        containerHeight="450px"
+                        cardWidth="320px"
+                    />
+                </section>
+            )}
 
             {/* Unified Features & Quality Section */}
             <UnifiedFeaturesSection />
@@ -493,7 +563,7 @@ export function Landing() {
                 </div>
 
                 {/* Stats under marquee */}
-                <motion.div
+                {/* <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
@@ -516,129 +586,18 @@ export function Landing() {
                         <div className="text-3xl md:text-4xl font-bold text-white mb-1">Pan Nepal</div>
                         <div className="text-white/50 text-sm uppercase tracking-wider">Coverage</div>
                     </div>
-                </motion.div>
+                </motion.div> */}
             </section>
 
-            {/* Location Map Section */}
-            <section className="py-24 bg-white w-full">
-                <div className="max-w-7xl mx-auto px-8 lg:px-12 w-full">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.5 }}
-                        className="text-center mb-12"
-                    >
-                        <h2 className="text-3xl md:text-4xl font-bold text-charcoal mb-4">
-                            Visit Our Factory
-                        </h2>
-                        <p className="text-graphite text-lg max-w-2xl mx-auto">
-                            Come see where quality notebooks are made. We're located in Jyamire, Chitwan, Nepal.
-                        </p>
-                    </motion.div>
-
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.6, delay: 0.2 }}
-                        className="relative"
-                    >
-                        {/* Map Container with styling */}
-                        <div className="relative rounded-2xl overflow-hidden shadow-heavy">
-                            {/* Decorative gradient border */}
-                            <div className="absolute inset-0 bg-gradient-to-br from-brand-mid via-brand-deep to-brand-darkest p-[2px] rounded-2xl">
-                                <div className="w-full h-full bg-white rounded-2xl" />
-                            </div>
-
-                            {/* Map iframe */}
-                            <div className="relative z-10 rounded-2xl overflow-hidden">
-                                <iframe
-                                    title="Puspanjali Location"
-                                    src="https://www.openstreetmap.org/export/embed.html?bbox=84.54062497041809%2C27.612296011390057%2C84.55062497041809%2C27.622296011390057&layer=mapnik&marker=27.617296011390057%2C84.54562497041809"
-                                    width="100%"
-                                    height="450"
-                                    style={{ border: 0 }}
-                                    loading="lazy"
-                                    referrerPolicy="no-referrer-when-downgrade"
-                                    className="w-full"
-                                />
-                            </div>
-                        </div>
-
-                        {/* Location Info Card */}
-                        <motion.div
-                            initial={{ opacity: 0, x: -30 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.5, delay: 0.4 }}
-                            className="absolute bottom-6 left-6 bg-white/95 backdrop-blur-sm rounded-xl shadow-heavy p-6 max-w-sm hidden md:block"
-                        >
-                            <div className="flex items-start gap-4">
-                                <div className="w-12 h-12 bg-gradient-to-br from-brand-mid to-brand-deep rounded-xl flex items-center justify-center shrink-0">
-                                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    </svg>
-                                </div>
-                                <div>
-                                    <h3 className="font-semibold text-charcoal text-lg mb-1">
-                                        Puspanjali Stationery
-                                    </h3>
-                                    <p className="text-graphite text-sm leading-relaxed">
-                                        Jyamire, Chitwan<br />
-                                        Nepal
-                                    </p>
-                                    <a
-                                        href="https://www.google.com/maps?q=27.617296011390057,84.54562497041809"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-1 text-brand-deep hover:text-brand-darkest font-medium text-sm mt-3 transition-colors"
-                                    >
-                                        Get Directions
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                        </svg>
-                                    </a>
-                                </div>
-                            </div>
-                        </motion.div>
-                    </motion.div>
-
-                    {/* Mobile Location Info */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.5, delay: 0.3 }}
-                        className="mt-6 bg-white rounded-xl shadow-medium p-5 md:hidden"
-                    >
-                        <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 bg-gradient-to-br from-brand-mid to-brand-deep rounded-lg flex items-center justify-center shrink-0">
-                                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                </svg>
-                            </div>
-                            <div className="flex-1">
-                                <h3 className="font-semibold text-charcoal">Jyamire, Chitwan, Nepal</h3>
-                            </div>
-                            <a
-                                href="https://www.google.com/maps?q=27.617296011390057,84.54562497041809"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="px-4 py-2 bg-brand-deep text-white text-sm font-medium rounded-lg hover:bg-brand-darkest transition-colors"
-                            >
-                                Directions
-                            </a>
-                        </div>
-                    </motion.div>
-                </div>
-            </section>
 
             {/* <NepalOutline>
                 <div></div>
             </NepalOutline> */}
+
+            {/* About Section Continuation */}
+            <div id="about">
+                <About />
+            </div>
         </div>
     );
 }

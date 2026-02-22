@@ -3,10 +3,10 @@ import type { Brand, Notebook, NotebookVariant, NotebookType, Size, Ruling, Filt
 // --- Filter Options Mock Data ---
 
 export const mockBrands: Brand[] = [
-    { id: 1, name: 'Puspanjali', slug: 'puspanjali', description: 'Premium quality notebooks for students and professionals.' },
-    { id: 2, name: 'Eco-Write', slug: 'eco-write', description: 'Sustainable and recycled paper notebooks.' },
-    { id: 3, name: 'Zenith', slug: 'zenith', description: 'High-end stationery and journals.' },
-    { id: 4, name: 'Classmate', slug: 'classmate', description: 'Popular choice for school students.' },
+    { id: 1, name: 'Puspanjali', slug: 'puspanjali', description: 'Premium quality notebooks for students and professionals.', paper: '60 GSM White Bond Paper' },
+    { id: 2, name: 'Eco-Write', slug: 'eco-write', description: 'Sustainable and recycled paper notebooks.', paper: '90 GSM Recycled Kraft Paper' },
+    { id: 3, name: 'Zenith', slug: 'zenith', description: 'High-end stationery and journals.', paper: '80 GSM Premium Ivory Paper' },
+    { id: 4, name: 'Classmate', slug: 'classmate', description: 'Popular choice for school students.', paper: '70 GSM Brightwhite Paper' },
 ];
 
 export const mockNotebookTypes: NotebookType[] = [

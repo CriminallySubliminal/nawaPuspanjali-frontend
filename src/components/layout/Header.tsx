@@ -15,12 +15,16 @@ export function Header() {
     const navItems = [
         { path: '/', label: 'Home' },
         { path: '/products', label: 'Products' },
-        { path: '/about', label: 'About' },
+        { path: '/#about', label: 'About' },
         { path: '/contact', label: 'Contact' }
     ];
 
     const activeIndex = navItems.findIndex(item => {
-        if (item.path === '/') return location.pathname === '/';
+        if (item.path.includes('#')) {
+            const [urlPath, urlHash] = item.path.split('#');
+            return location.pathname === urlPath && location.hash === `#${urlHash}`;
+        }
+        if (item.path === '/') return location.pathname === '/' && !location.hash;
         return location.pathname.startsWith(item.path) ||
             (item.path === '/products' && location.pathname.startsWith('/notebooks/'));
     });
@@ -57,7 +61,7 @@ export function Header() {
                         to="/"
                         className="group flex items-center gap-4"
                     >
-                        <motion.div
+                        {/* <motion.div
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             className="w-12 h-12 bg-brand-deep rounded-xl flex items-center justify-center shadow-medium"
@@ -65,10 +69,10 @@ export function Header() {
                             <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                             </svg>
-                        </motion.div>
+                        </motion.div> */}
                         <div className="hidden sm:block">
-                            <span className="block text-xl font-bold text-charcoal tracking-tight">Nawa Puspanjali</span>
-                            <span className="block text-xs text-graphite uppercase tracking-widest">Copy Tatha Stationery Udhyog</span>
+                            <span className="block text-2xl font-bold text-charcoal tracking-tight">Nawa Puspanjali</span>
+                            <span className="block text-xs text-graphite uppercase tracking-widest">Copy Tatha Stationery Udhyog Pvt. Ltd.</span>
                         </div>
                     </Link>
 

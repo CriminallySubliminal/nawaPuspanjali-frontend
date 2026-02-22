@@ -38,7 +38,7 @@ export function Layout({ children }: LayoutProps) {
                     items={[
                         { label: 'Home', link: '/', ariaLabel: 'Go to home' },
                         { label: 'Products', link: '/products', ariaLabel: 'Go to products' },
-                        { label: 'About', link: '/about', ariaLabel: 'Go to about' },
+                        { label: 'About', link: '/#about', ariaLabel: 'Go to about' },
                         { label: 'Contact', link: '/contact', ariaLabel: 'Go to contact' }
                     ]}
                     displaySocials={true}
@@ -113,7 +113,7 @@ export function Layout({ children }: LayoutProps) {
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="/about" className="text-gray-300 hover:text-amber-400 transition-colors duration-300 relative group">
+                                            <a href="/#about" className="text-gray-300 hover:text-amber-400 transition-colors duration-300 relative group">
                                                 About Us
                                                 <span className="absolute bottom-0 left-0 w-0 h-px bg-amber-400 transition-all duration-300 group-hover:w-full"></span>
                                             </a>

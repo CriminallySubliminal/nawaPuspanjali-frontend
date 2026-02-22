@@ -4,6 +4,24 @@ import GridPattern from '@/components/ui/grid-pattern';
 import { cn } from '@/lib/utils';
 import CircularGallery from '@/components/ui/CircularGallery';
 
+import frontPhoto from '@/assets/images/photos/front.webp';
+import factory1 from '@/assets/images/photos/factory-1.webp';
+import factory2 from '@/assets/images/photos/factory-2.webp';
+import factory3 from '@/assets/images/photos/factory-3.webp';
+import factory4 from '@/assets/images/photos/factory-4.webp';
+import factory5 from '@/assets/images/photos/factory-5.webp';
+import warehouse1 from '@/assets/images/photos/warehouse-1.webp';
+import warehouse2 from '@/assets/images/photos/warehouse-2.webp';
+import warehouse3 from '@/assets/images/photos/warehouse-3.webp';
+
+import team1 from '@/assets/images/test/pexels-kampus-8353841.webp';
+import team2 from '@/assets/images/test/pexels-katerina-holmes-5905497.webp';
+import team3 from '@/assets/images/test/pexels-max-fischer-5211470.webp';
+
+import founderImg from '@/assets/images/team/chandra_khanal.webp';
+import kumarImg from '@/assets/images/team/kumar_khanal.webp';
+import kiranImg from '@/assets/images/team/kiran_kumar_khanal.webp'
+
 
 /**
  * About page with company story and values in a Z-pattern layout.
@@ -33,13 +51,15 @@ export function About() {
                     >
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-amber-100/50 text-amber-800 text-lg font-serif font-medium mb-6 backdrop-blur-sm border border-amber-200/50">
                             {/* <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> */}
-                            Since 2056 B.S.
+                            {/* Since 2056 B.S. */}
                         </div>
-                        <h1 className="text-5xl md:text-7xl font-bold text-charcoal mb-8 tracking-tight">
+                        <h1 className="text-5xl md:text-7xl font-bold text-charcoal mb-8 tracking-tight leading-tight">
                             Crafting Nepal's <br className="hidden md:block" />
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-amber-400">
                                 Writing Legacy
                             </span>
+                            <br />
+                            Since 2056 B.S.
                         </h1>
                         <p className="text-xl text-slate-text max-w-2xl mx-auto leading-relaxed">
                             More than just paper and ink. We are on a mission to empower education
@@ -72,7 +92,7 @@ export function About() {
                                     modern innovation.
                                 </span>
                                 <p>
-                                    Located in the heart of Kathmandu, our facility is not just a factory—it's
+                                    Located in the heart of Chitwan, our facility is not just a factory, it's
                                     a hub where precision technology meets the careful eye of skilled artisans.
                                     Every notebook that leaves our hands carries the essence of Nepalese dedication.
                                 </p>
@@ -80,10 +100,13 @@ export function About() {
                             <div className="mt-10">
                                 <div className="flex items-center gap-4">
                                     <div className="flex -space-x-4">
-                                        {[1, 2, 3].map((i) => (
-                                            <div key={i} className={`w-12 h-12 rounded-full border-2 border-white bg-gray-200 flex items-center justify-center text-xs font-bold text-gray-500 overflow-hidden`}>
-                                                {/* Placeholder for team avatars */}
-                                                <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-300" />
+                                        {[team1, team2, team3].map((img, i) => (
+                                            <div key={i} className={`w-12 h-12 rounded-full border-2 border-white bg-gray-200 flex items-center justify-center text-xs font-bold text-gray-500 overflow-hidden relative`}>
+                                                <img
+                                                    src={img}
+                                                    alt={`Team member ${i + 1}`}
+                                                    className="absolute inset-0 w-full h-full object-cover"
+                                                />
                                             </div>
                                         ))}
                                     </div>
@@ -95,7 +118,7 @@ export function About() {
                             </div>
                         </motion.div>
 
-                        {/* <motion.div
+                        <motion.div
                             initial={{ opacity: 0, x: 50 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true, margin: "-100px" }}
@@ -103,20 +126,22 @@ export function About() {
                             className="relative"
                         >
                             <div className="relative aspect-square lg:aspect-[4/3] rounded-2xl overflow-hidden bg-ivory border border-amber-100/50 shadow-2xl shadow-amber-900/5">
-                                
-                                <div className="absolute inset-0 flex items-center justify-center p-12 opacity-80">
-                                    <div className="w-full h-full bg-gradient-to-br from-amber-100/50 to-transparent rounded-full blur-3xl" />
-                                </div>
-                              
+                                <img
+                                    src={frontPhoto}
+                                    alt="Nawa Puspanjali Factory Front"
+                                    className="absolute inset-0 w-full h-full object-cover"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+
                                 <div className="absolute bottom-8 left-8 right-8 bg-white/80 backdrop-blur-md p-6 rounded-xl border border-white/50 shadow-lg">
                                     <h3 className="font-serif font-bold text-charcoal mb-1 text-xl">Jyamire, Chitwan, Nepal</h3>
                                     <p className="text-sm text-slate-text">Our central hub for design and manufacturing, connecting creativity across the diverse landscapes of Nepal.</p>
                                 </div>
                             </div>
-                         
+
                             <div className="absolute -top-10 -right-10 w-40 h-40 bg-amber-400/10 rounded-full blur-2xl -z-10" />
                             <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-teal-400/10 rounded-full blur-2xl -z-10" />
-                        </motion.div> */}
+                        </motion.div>
                     </div>
                 </div>
             </section>
@@ -131,15 +156,17 @@ export function About() {
                         From raw materials to finished masterpieces, witness the journey of perfection.
                     </p> */}
                 </div>
-                <div className="h-[600px] w-full">
+                <div className="h-[500px] w-full">
                     <CircularGallery
                         items={[
-                            { image: 'https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=2787&auto=format&fit=crop', text: '' },
-                            { image: 'https://images.unsplash.com/photo-1586075010923-2dd4570fb338?q=80&w=2787&auto=format&fit=crop', text: '' },
-                            { image: 'https://images.unsplash.com/photo-1517842645767-c639042777db?q=80&w=2670&auto=format&fit=crop', text: '' },
-                            { image: 'https://images.unsplash.com/photo-1606166187734-a4b787c80088?q=80&w=2670&auto=format&fit=crop', text: '' },
-                            { image: 'https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?q=80&w=2574&auto=format&fit=crop', text: '' },
-                            { image: 'https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?q=80&w=2670&auto=format&fit=crop', text: '' },
+                            { image: factory1, text: 'Precision Manufacturing' },
+                            { image: factory2, text: 'Quality Assurance' },
+                            { image: factory3, text: 'Production Floor' },
+                            { image: factory4, text: 'Modern Machinery' },
+                            { image: factory5, text: 'Artisanal Crafting' },
+                            { image: warehouse1, text: 'Organized Storage' },
+                            { image: warehouse2, text: 'Logistics Hub' },
+                            { image: warehouse3, text: 'Ready for Dispatch' },
                         ]}
                         bend={-3}
                         textColor="#1f2937"
@@ -259,10 +286,11 @@ export function About() {
                                 className="text-center max-w-lg"
                             >
                                 <div className="w-40 h-40 mx-auto rounded-full bg-amber-100 border-4 border-white shadow-xl overflow-hidden mb-6 relative group">
-                                    <div className="absolute inset-0 bg-gray-200 flex items-center justify-center text-gray-400">
-                                        {/* Placeholder for Grandfather's Photo */}
-                                        <svg className="w-16 h-16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" /></svg>
-                                    </div>
+                                    <img
+                                        src={founderImg}
+                                        alt="Chandra Prasad Khanal"
+                                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                    />
                                 </div>
                                 <h3 className="text-2xl font-bold text-charcoal font-serif">Chandra Prasad Khanal</h3>
                                 <p className="text-amber-600 font-medium mb-4 tracking-widest uppercase text-xs">Founder & Chairman</p>
@@ -313,10 +341,10 @@ export function About() {
                         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 pt-8">
                             {[
                                 { name: "Keshav Khanal", role: "Managing Director", quote: "Innovation is respecting tradition while embracing the future." },
-                                { name: "Kiran Kumar Khanal", role: "Director of Operations", quote: "Efficiency meets excellence in every page we produce." },
-                                { name: "Kumar Khanal", role: "Director of Quality", quote: "Perfection is not an accident; it is the result of high intention." },
+                                { name: "Kiran Kumar Khanal", role: "Director of Operations", quote: "Efficiency meets excellence in every page we produce.", image: kiranImg },
+                                { name: "Kumar Khanal", role: "Director of Quality", quote: "Perfection is not an accident; it is the result of high intention.", image: kumarImg },
                                 { name: "Kishor Khanal", role: "Director of Marketing", quote: "Connecting our stories with yours, one notebook at a time." }
-                            ].map((partner, index) => (
+                            ].map((partner: { name: string; role: string; quote: string; image?: string }, index) => (
                                 <motion.div
                                     key={index}
                                     initial={{ opacity: 0, y: 30 }}
@@ -326,10 +354,17 @@ export function About() {
                                     className="text-center group p-6 rounded-2xl hover:bg-white hover:shadow-subtle transition-all duration-300"
                                 >
                                     <div className="w-32 h-32 mx-auto rounded-full bg-gray-100 border-4 border-white shadow-lg overflow-hidden mb-4 relative">
-                                        <div className="absolute inset-0 bg-gray-200 flex items-center justify-center text-gray-400">
-                                            {/* Placeholder for Partner's Photo */}
-                                            <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" /></svg>
-                                        </div>
+                                        {partner.image ? (
+                                            <img
+                                                src={partner.image}
+                                                alt={partner.name}
+                                                className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                            />
+                                        ) : (
+                                            <div className="absolute inset-0 bg-gray-200 flex items-center justify-center text-gray-400">
+                                                <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" /></svg>
+                                            </div>
+                                        )}
                                     </div>
                                     <h4 className="text-xl font-bold text-charcoal mb-1 font-serif group-hover:text-amber-600 transition-colors">{partner.name}</h4>
                                     <p className="text-sm text-amber-600 font-medium mb-3">{partner.role}</p>

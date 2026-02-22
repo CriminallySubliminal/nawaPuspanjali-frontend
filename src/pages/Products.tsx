@@ -15,6 +15,8 @@ import { NotebookCard } from '../components/notebook/NotebookCard';
 export function Products() {
     const [searchParams, setSearchParams] = useSearchParams();
     const brandParam = searchParams.get('brand');
+    const typeParam = searchParams.get('notebook_type');
+    const sizeParam = searchParams.get('size');
 
     // Data states
     const [filterOptions, setFilterOptions] = useState<FilterOptions | null>(null);
@@ -57,11 +59,12 @@ export function Products() {
         }
     };
 
-    // Initial load: fetch all filter options and initial data
+    // 1. Initial Load: Fetch all filter options and initial data ONCE on mount
     useEffect(() => {
         const fetchInitialData = async () => {
             setLoadingState('loading');
             try {
+                // Fetch everything once
                 const [optionsRes, notebooksRes] = await Promise.all([
                     NotebookService.getFilterOptions(),
                     NotebookService.getNotebooks({})
@@ -70,19 +73,8 @@ export function Products() {
                 if (optionsRes.success && notebooksRes.success) {
                     setFilterOptions(optionsRes.data);
                     setNotebooks(notebooksRes.data);
-
-                    // Set initial brand: URL param takes priority, otherwise first brand
-                    const urlBrand = brandParam ? optionsRes.data.brands.find(b => b.slug === brandParam) : null;
-                    if (urlBrand) {
-                        setSelectedBrandId(urlBrand.id);
-                    } else if (optionsRes.data.brands.length > 0) {
-                        const firstBrand = optionsRes.data.brands[0];
-                        setSelectedBrandId(firstBrand.id);
-                        // Update query param for consistency
-                        setSearchParams({ brand: firstBrand.slug }, { replace: true });
-                    }
-
                     setLoadingState('success');
+                    // Selection state will be handled by the sync effect below
                 } else {
                     setError('Failed to load product data');
                     setLoadingState('error');
@@ -95,7 +87,38 @@ export function Products() {
         };
 
         fetchInitialData();
-    }, [brandParam]);
+    }, []); // Empty dependency array means this only runs once
+
+    // 2. Synchronize selection states with URL parameters
+    useEffect(() => {
+        if (!filterOptions) return;
+
+        // Sync Brand
+        const urlBrand = brandParam ? filterOptions.brands.find(b => b.slug === brandParam) : null;
+        if (urlBrand) {
+            setSelectedBrandId(urlBrand.id);
+        } else if (filterOptions.brands.length > 0) {
+            // Default to first brand if no brand in URL
+            const firstBrand = filterOptions.brands[0];
+            setSelectedBrandId(firstBrand.id);
+            setSearchParams(prev => {
+                prev.set('brand', firstBrand.slug);
+                return prev;
+            }, { replace: true });
+        }
+
+        // Sync Type
+        const urlType = typeParam ? filterOptions.notebook_types.find(t => t.slug === typeParam) : null;
+        if (urlType) {
+            setSelectedTypeId(urlType.id);
+        }
+
+        // Sync Size
+        const urlSize = sizeParam ? filterOptions.sizes.find(s => s.slug === sizeParam) : null;
+        if (urlSize) {
+            setSelectedSizeId(urlSize.id);
+        }
+    }, [filterOptions, brandParam, typeParam, sizeParam, setSearchParams]);
 
     // Apply filtering to notebooks
     const filteredResults = useMemo(() => {
@@ -247,7 +270,7 @@ export function Products() {
                                 ref={scrollContainerRef}
                                 onScroll={checkScroll}
                                 data-scroll-container
-                                className="flex items-center gap-4 overflow-x-auto pb-6 px-16 scroll-smooth no-scrollbar"
+                                className="flex items-center gap-4 justify-center overflow-x-auto pb-6 px-16 scroll-smooth no-scrollbar"
                                 style={{
                                     scrollbarWidth: 'none',
                                     msOverflowStyle: 'none',
@@ -258,11 +281,7 @@ export function Products() {
                                     <button
                                         key={brand.id}
                                         onClick={() => {
-                                            setSelectedBrandId(brand.id);
-                                            // Reset children to trigger auto-select
-                                            setSelectedTypeId(null);
-                                            setSelectedSizeId(null);
-                                            // Update query param
+                                            // Only update search params. The sync Effect will handle selection state.
                                             setSearchParams({ brand: brand.slug }, { replace: true });
                                         }}
                                         className={`w-40 md:w-48 py-2.5 rounded-sm font-bold transition-all whitespace-nowrap shadow-sm border flex-shrink-0 flex items-center justify-center ${String(selectedBrandId) === String(brand.id)
