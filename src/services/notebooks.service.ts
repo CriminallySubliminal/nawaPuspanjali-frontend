@@ -8,6 +8,38 @@ import type { Brand, Notebook, NotebookVariant, ApiResponse, FilterOptions } fro
 import { MockDataService } from '../data/mockData';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
+const CACHE_KEY = 'puspanjali_api_cache';
+const CACHE_TTL = 30 * 60 * 1000; // 30 minutes
+
+interface CacheData {
+    filterOptions: FilterOptions | null;
+    notebooks: Notebook[] | null;
+    timestamp: number;
+}
+
+// In-memory reference that syncs with sessionStorage
+let serviceCache: CacheData = (() => {
+    try {
+        const saved = sessionStorage.getItem(CACHE_KEY);
+        if (saved) {
+            const parsed = JSON.parse(saved);
+            const isExpired = Date.now() - parsed.timestamp > CACHE_TTL;
+            if (!isExpired) return parsed;
+        }
+    } catch (e) {
+        console.warn('Failed to load cache from sessionStorage', e);
+    }
+    return { filterOptions: null, notebooks: null, timestamp: Date.now() };
+})();
+
+const saveCache = () => {
+    try {
+        serviceCache.timestamp = Date.now();
+        sessionStorage.setItem(CACHE_KEY, JSON.stringify(serviceCache));
+    } catch (e) {
+        console.warn('Failed to save cache to sessionStorage', e);
+    }
+};
 
 const handleResponse = async <T>(response: Response): Promise<ApiResponse<T>> => {
     if (!response.ok) {
@@ -40,10 +72,19 @@ export const NotebookService = {
      * Fetch all filter options (brands, types, sizes, rulings)
      */
     async getFilterOptions(): Promise<ApiResponse<FilterOptions>> {
+        // Return from cache if available
+        if (serviceCache.filterOptions) {
+            return { data: serviceCache.filterOptions, success: true };
+        }
+
         try {
             const response = await fetch(`${API_BASE_URL}/filter-options/`);
             const result = await handleResponse<FilterOptions>(response);
-            if (result.success) return result;
+            if (result.success) {
+                serviceCache.filterOptions = result.data;
+                saveCache();
+                return result;
+            }
             console.warn('getFilterOptions API success false, falling back to mock data', result.message);
         } catch (error) {
             console.warn('getFilterOptions fetch failed, falling back to mock data', error);
@@ -78,6 +119,12 @@ export const NotebookService = {
         search?: string;
         ordering?: string;
     }): Promise<ApiResponse<Notebook[]>> {
+        // Check cache for global notebooks fetch (empty params)
+        const isGlobalFetch = !params.brand && !params.type && !params.size && !params.search && !params.ordering;
+        if (isGlobalFetch && serviceCache.notebooks) {
+            return { data: serviceCache.notebooks, success: true };
+        }
+
         try {
             const queryParams = new URLSearchParams();
             if (params.brand) queryParams.append('brand', params.brand.toString());
@@ -89,9 +136,11 @@ export const NotebookService = {
             const response = await fetch(`${API_BASE_URL}/notebooks/?${queryParams.toString()}`);
             const result = await handleResponse<Notebook[]>(response);
             if (result.success) {
-                // result.data.forEach(notebook => {
-                //     notebook.image = `${notebook.image}?t=${Date.now()}`;
-                // });
+                // Cache the global result
+                if (isGlobalFetch) {
+                    serviceCache.notebooks = result.data;
+                    saveCache();
+                }
                 return result;
             }
             console.warn('getNotebooks API success false, falling back to mock data', result.message);

@@ -97,7 +97,7 @@ const AngledCard = ({
 
     return (
         <motion.div
-            className="relative flex-shrink-0 group overflow-visible cursor-pointer"
+            className="relative flex-shrink-0 group overflow-visible cursor-pointer bg-transparent"
             style={{
                 width: cardWidth,
                 height: "100%",
@@ -112,12 +112,12 @@ const AngledCard = ({
             onClick={item.onClick}
         >
             {/* The Image Card */}
-            <div className="relative h-full w-full overflow-hidden border border-white/10 bg-muted 
-            min-h-[300px] shadow-2xl">
+            <div className="relative h-full w-full overflow border border-white/10 bg-transparent 
+            min-h-[400px]">
                 <img
                     src={item.url}
                     alt={item.alt || "Slider Image"}
-                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    className="absolute inset-0 h-full w-full object-contain bg-transparent transition-transform duration-500 group-hover:scale-110"
                 />
                 {/* Optional Overlay/Title */}
                 {item.title && (
@@ -207,7 +207,7 @@ export const AngledSlider = ({
     return (
         <div
             className={cn(
-                "relative w-full overflow-hidden bg-background py-10 perspective-1000",
+                "mt-10 relative w-full overflow-hidden bg-background perspective-1000",
                 className
             )}
             style={{

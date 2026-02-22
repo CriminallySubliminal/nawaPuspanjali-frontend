@@ -57,7 +57,7 @@ export function NotebookCard({ notebook, index = 0, variant = 'default' }: Noteb
 
                         {!isCompact && (
                             <div className="flex flex-wrap gap-1.5 mb-3">
-                                {notebook.available_sizes?.slice(0, 3).map(size => (
+                                {notebook.available_sizes?.slice(0, 4).map(size => (
                                     <span key={size.id} className="text-[9px] text-md tracking-tight font-semibold bg-ivory px-2 py-1 rounded-md text-graphite border border-warm-gray-dark/30 shadow-sm">
                                         {size.name}
                                     </span>
