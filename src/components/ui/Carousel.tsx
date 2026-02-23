@@ -57,11 +57,15 @@ function CarouselItem({ item, index, itemWidth, round, trackItemOffset, x, trans
             transition={transition}
         >
             <div className={`carousel-item-header ${round ? 'round' : ''}`}>
-                {item.image && (
+                
+
+                {/* {item.image && (
                     <div className="carousel-image-wrapper">
                         <img src={item.image} alt={item.title} className="carousel-logo-image" />
                     </div>
-                )}
+                )} */}
+
+
                 {/* <span className="carousel-icon-container" style={{ backgroundColor: item.color || '#fff' }}>
                     {
                     // item.image ?

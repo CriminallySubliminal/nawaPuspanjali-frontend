@@ -374,7 +374,7 @@ export function Landing() {
                                 Our Product Lines
                             </h2>
                             <p className="text-graphite text-lg max-w-xl">
-                                Three distinct brands designed to meet specific needs
+                                Four distinct brands designed to meet specific needs
                             </p>
                         </div>
                         <Link
@@ -388,6 +388,7 @@ export function Landing() {
                         </Link>
                     </motion.div>
 
+                    {/* Product Lines Carousel */}
                     <div className="mt-8">
                         <Carousel
                             items={productLines.map((line, index) => ({
@@ -612,9 +613,9 @@ const productLines = [
         image: pathsalaLogo,
     },
     {
-        name: 'Puspanjali Plus',
+        name: 'Puspanjali',
         tagline: 'Empowering education through quality stationery',
-        href: '/products?brand=puspanjali-plus',
+        href: '/products?brand=puspanjali',
         color: '#0d9488',
         image: puspanjaliPlusLogo,
     },

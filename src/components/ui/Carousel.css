@@ -1,12 +1,14 @@
 .carousel-container {
     position: relative;
+    background: transparent;
     overflow: hidden;
     border-radius: 24px;
     padding: 16px;
-    background: rgba(255, 255, 255, 0.5);
+    /* background: rgba(255, 255, 255, 0.5); */
     backdrop-filter: blur(8px);
     border: 1px solid rgba(0, 0, 0, 0.05);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    scale:1.1;
 }
 
 .carousel-track {
@@ -32,7 +34,7 @@
     cursor: grab;
     height: 100%;
     min-height: 200px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); */
     transition: box-shadow 0.3s ease;
 }
 
@@ -41,15 +43,16 @@
 }
 
 .carousel-item:hover {
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+    /* box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12); */
 }
 
 .carousel-container.round {
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    /* border: 1px solid rgba(0, 0, 0, 0.1); */
 }
 
 .carousel-item.round {
-    background-color: #ffffff;
+    /* background-color: #ffffff; */
+    background: transparent;
     justify-content: center;
     align-items: center;
     text-align: center;
@@ -105,7 +108,7 @@
 .carousel-item-title {
     margin-bottom: 8px;
     font-weight: 700;
-    font-size: 20px;
+    font-size: 50px;
     color: #1a1a1a;
 }
 
