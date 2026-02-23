@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import type { Notebook, LoadingState } from '../types';
+import { useQuery } from '@tanstack/react-query';
 import { NotebookService } from '../services/notebooks.service';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 import { EmptyState } from '../components/ui/EmptyState';
@@ -23,33 +23,27 @@ export function ProductDetail() {
     const navigate = useNavigate();
     const rulingsSectionRef = useRef<HTMLElement>(null);
 
-    const [notebook, setNotebook] = useState<Notebook | null>(null);
-    const [loadingState, setLoadingState] = useState<LoadingState>('idle');
     const [selectedRuling, setSelectedRuling] = useState<{ name: string, image: string } | null>(null);
+
+    const {
+        data: notebook,
+        isLoading,
+        isError,
+        error
+    } = useQuery({
+        queryKey: ['notebook', notebookSlug],
+        queryFn: async () => {
+            if (!notebookSlug) throw new Error('Notebook slug is required');
+            const res = await NotebookService.getNotebookBySlug(notebookSlug);
+            if (!res.success) throw new Error(res.message || 'Failed to load product details');
+            return res.data;
+        },
+        enabled: !!notebookSlug
+    });
 
     const scrollToRulings = () => {
         rulingsSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     };
-
-    useEffect(() => {
-        const fetchNotebook = async () => {
-            setLoadingState('loading');
-            try {
-                const response = await NotebookService.getNotebookBySlug(notebookSlug!);
-                if (response.success) {
-                    setNotebook(response.data);
-                    setLoadingState('success');
-                } else {
-                    setLoadingState('error');
-                }
-            } catch (err) {
-                console.error('Error fetching notebook:', err);
-                setLoadingState('error');
-            }
-        };
-
-        fetchNotebook();
-    }, [notebookSlug]);
 
     // Process variants into a table structure grouped by size
     const getVariantTable = () => {
@@ -104,7 +98,7 @@ export function ProductDetail() {
         notebook?.variants?.map(v => v.ruling.name) || []
     ));
 
-    if (loadingState === 'loading') {
+    if (isLoading) {
         return (
             <div className="py-24">
                 <LoadingSpinner message="Loading product details..." />
@@ -112,13 +106,13 @@ export function ProductDetail() {
         );
     }
 
-    if (loadingState === 'error' || !notebook) {
+    if (isError || !notebook) {
         return (
             <div className="py-24">
                 <div className="max-w-7xl mx-auto px-8 lg:px-12">
                     <EmptyState
                         title="Product not found"
-                        description="The requested product could not be found."
+                        description={error instanceof Error ? error.message : "The requested product could not be found."}
                         action={{
                             label: 'Back to Products',
                             onClick: () => navigate('/products'),

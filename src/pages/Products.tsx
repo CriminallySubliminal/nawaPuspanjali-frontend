@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo, useRef } from 'react';
 import { ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useQuery } from '@tanstack/react-query';
 import { NotebookService } from '../services/notebooks.service';
 import type { Notebook, LoadingState, FilterOptions } from '../types';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
@@ -18,16 +19,43 @@ export function Products() {
     const typeParam = searchParams.get('notebook_type');
     const sizeParam = searchParams.get('size');
 
-    // Data states
-    const [filterOptions, setFilterOptions] = useState<FilterOptions | null>(null);
-    const [notebooks, setNotebooks] = useState<Notebook[]>([]);
-    const [loadingState, setLoadingState] = useState<LoadingState>('loading');
-    const [error, setError] = useState<string | null>(null);
+    // Data queries with React Query
+    const {
+        data: filterOptions,
+        isLoading: isLoadingOptions,
+        isError: isErrorOptions
+    } = useQuery({
+        queryKey: ['filterOptions'],
+        queryFn: async () => {
+            const res = await NotebookService.getFilterOptions();
+            if (!res.success) throw new Error(res.message || 'Failed to load filter options');
+            return res.data;
+        }
+    });
 
-    // Selection states
+    const {
+        data: allNotebooks = [],
+        isLoading: isLoadingNotebooks,
+        isError: isErrorNotebooks,
+        error: notebooksError
+    } = useQuery({
+        queryKey: ['notebooks'],
+        queryFn: async () => {
+            const res = await NotebookService.getNotebooks({});
+            if (!res.success) throw new Error(res.message || 'Failed to load notebooks');
+            return res.data;
+        }
+    });
+
+    // Loading and Error consolidated
+    const isLoading = isLoadingOptions || (isLoadingNotebooks && allNotebooks.length === 0);
+    const hasError = isErrorOptions || isErrorNotebooks;
+
+    // Selection states (synced with URL via Effect for compatibility)
     const [selectedBrandId, setSelectedBrandId] = useState<number | null>(null);
     const [selectedTypeId, setSelectedTypeId] = useState<number | null>(null);
     const [selectedSizeId, setSelectedSizeId] = useState<number | null>(null);
+
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [showLeftArrow, setShowLeftArrow] = useState(false);
     const [showRightArrow, setShowRightArrow] = useState(false);
@@ -59,37 +87,7 @@ export function Products() {
         }
     };
 
-    // 1. Initial Load: Fetch all filter options and initial data ONCE on mount
-    useEffect(() => {
-        const fetchInitialData = async () => {
-            setLoadingState('loading');
-            try {
-                // Fetch everything once
-                const [optionsRes, notebooksRes] = await Promise.all([
-                    NotebookService.getFilterOptions(),
-                    NotebookService.getNotebooks({})
-                ]);
-
-                if (optionsRes.success && notebooksRes.success) {
-                    setFilterOptions(optionsRes.data);
-                    setNotebooks(notebooksRes.data);
-                    setLoadingState('success');
-                    // Selection state will be handled by the sync effect below
-                } else {
-                    setError('Failed to load product data');
-                    setLoadingState('error');
-                }
-            } catch (err) {
-                console.error('Exception in fetchInitialData', err);
-                setError('An unexpected error occurred');
-                setLoadingState('error');
-            }
-        };
-
-        fetchInitialData();
-    }, []); // Empty dependency array means this only runs once
-
-    // 2. Synchronize selection states with URL parameters
+    // Synchronize selection states with URL parameters
     useEffect(() => {
         if (!filterOptions) return;
 
@@ -122,20 +120,20 @@ export function Products() {
 
     // Apply filtering to notebooks
     const filteredResults = useMemo(() => {
-        return notebooks.filter(n => {
+        return allNotebooks.filter(n => {
             const matchesBrand = !selectedBrandId || String(n.brand?.id || n.brand) === String(selectedBrandId);
             const matchesType = !selectedTypeId || String(n.notebook_type?.id || n.notebook_type) === String(selectedTypeId);
             const matchesSize = !selectedSizeId || n.available_sizes?.some(s => String(s.id || s) === String(selectedSizeId));
             return matchesBrand && matchesType && matchesSize;
         });
-    }, [notebooks, selectedBrandId, selectedTypeId, selectedSizeId]);
+    }, [allNotebooks, selectedBrandId, selectedTypeId, selectedSizeId]);
 
     // Dependent Filter Options
     const availableTypes = useMemo(() => {
         if (!selectedBrandId) return filterOptions?.notebook_types || [];
 
         const typesMap = new Map();
-        notebooks.forEach(n => {
+        allNotebooks.forEach(n => {
             const brandId = n.brand?.id || n.brand;
             if (String(brandId) === String(selectedBrandId)) {
                 if (n.notebook_type && !typesMap.has(n.notebook_type.id)) {
@@ -144,13 +142,13 @@ export function Products() {
             }
         });
         return Array.from(typesMap.values());
-    }, [notebooks, selectedBrandId, filterOptions]);
+    }, [allNotebooks, selectedBrandId, filterOptions]);
 
     const availableSizes = useMemo(() => {
         if (!filterOptions) return [];
 
         const sizesMap = new Map();
-        notebooks.forEach(n => {
+        allNotebooks.forEach(n => {
             const brandId = n.brand?.id || n.brand;
             const typeId = n.notebook_type?.id || n.notebook_type;
 
@@ -166,7 +164,7 @@ export function Products() {
             }
         });
         return Array.from(sizesMap.values()).sort((a, b) => a.display_order - b.display_order);
-    }, [notebooks, selectedBrandId, selectedTypeId, filterOptions]);
+    }, [allNotebooks, selectedBrandId, selectedTypeId, filterOptions]);
 
     // Auto-select first type when available types change
     useEffect(() => {
@@ -194,16 +192,16 @@ export function Products() {
         }
     }, [availableSizes, selectedSizeId]);
 
-    if (loadingState === 'loading' && !filterOptions) {
+    if (isLoading && !filterOptions) {
         return <div className="py-24"><LoadingSpinner message="Loading products..." /></div>;
     }
 
-    if (loadingState === 'error') {
+    if (hasError) {
         return (
             <div className="py-24">
                 <EmptyState
                     title="Load Error"
-                    description={error || "Could not fetch products."}
+                    description={notebooksError?.message || "Could not fetch products."}
                     action={{ label: "Retry", onClick: () => window.location.reload() }}
                 />
             </div>
@@ -407,7 +405,7 @@ export function Products() {
                     {/* Results Grid / Mobile Scroll */}
                     <div className="mt-8">
                         <AnimatePresence mode="popLayout">
-                            {loadingState === 'loading' && notebooks.length === 0 ? (
+                            {isLoading && allNotebooks.length === 0 ? (
                                 <div className="py-24"><LoadingSpinner message="Loading products..." /></div>
                             ) : filteredResults.length > 0 ? (
                                 <>

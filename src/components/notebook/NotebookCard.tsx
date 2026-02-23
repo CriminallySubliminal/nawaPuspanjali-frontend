@@ -1,5 +1,7 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
+import { NotebookService } from '../../services/notebooks.service';
 import type { Notebook } from '../../types';
 
 interface NotebookCardProps {
@@ -14,6 +16,18 @@ interface NotebookCardProps {
  */
 export function NotebookCard({ notebook, index = 0, variant = 'default' }: NotebookCardProps) {
     const isCompact = variant === 'compact';
+    const queryClient = useQueryClient();
+
+    const prefetchNotebook = () => {
+        queryClient.prefetchQuery({
+            queryKey: ['notebook', notebook.slug],
+            queryFn: async () => {
+                const res = await NotebookService.getNotebookBySlug(notebook.slug);
+                if (!res.success) throw new Error(res.message || 'Failed to prefetch notebook');
+                return res.data;
+            }
+        });
+    };
 
     return (
         <motion.article
@@ -25,6 +39,7 @@ export function NotebookCard({ notebook, index = 0, variant = 'default' }: Noteb
             <Link
                 to={`/notebooks/${notebook.slug}`}
                 state={{ notebookId: notebook.id }}
+                onMouseEnter={prefetchNotebook}
                 className={`block bg-white rounded-lg overflow-hidden border border-warm-gray-dark/20 shadow-subtle hover:shadow-heavy transition-all duration-300 transform group-hover:-translate-y-1 h-full flex flex-col ${isCompact ? 'p-1' : ''}`}
             >
                 {/* Cover image container */}
