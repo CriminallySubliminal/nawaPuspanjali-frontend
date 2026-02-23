@@ -72,7 +72,7 @@ export function Header() {
                         </motion.div> */}
                         <div className="hidden sm:block">
                             <span className="block text-2xl font-bold text-charcoal tracking-tight">Nawa Puspanjali</span>
-                            <span className="block text-xs text-graphite uppercase tracking-widest">Copy Tatha Stationery Udhyog Pvt. Ltd.</span>
+                            <span className="block text-xs text-teal-500 bg-transparent uppercase tracking-widest">Copy Tatha Stationery Udhyog Pvt. Ltd.</span>
                         </div>
                     </Link>
 

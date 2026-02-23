@@ -107,6 +107,7 @@ const AngledCard = ({
             variants={cardVariants}
             initial="offHover"
             animate={isHovered ? "onHover" : "offHover"}
+            // animate={"offHover"}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             onClick={item.onClick}
@@ -120,11 +121,11 @@ const AngledCard = ({
                     className="absolute inset-0 h-full w-full object-contain bg-transparent transition-transform duration-500 group-hover:scale-110"
                 />
                 {/* Optional Overlay/Title */}
-                {item.title && (
+                {/* {item.title && (
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                         <h3 className="text-lg font-bold">{item.title}</h3>
                     </div>
-                )}
+                )} */}
             </div>
         </motion.div>
     );

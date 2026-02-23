@@ -273,7 +273,7 @@ export function Landing() {
                         className="mb-8"
                     >
                         <span className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-deep/5 backdrop-blur-sm text-brand-deep/90 text-sm font-medium rounded-full border border-brand-deep/10">
-                            <span className="w-2 h-2 bg-brand-light rounded-full animate-pulse" />
+                            {/* <span className="w-2 h-2 bg-brand-light rounded-full animate-pulse" /> */}
                             Proudly Crafted in Nepal 🇳🇵
                         </span>
                     </motion.div>

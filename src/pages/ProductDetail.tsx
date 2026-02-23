@@ -216,7 +216,7 @@ export function ProductDetail() {
                                             aria-label="View ruling samples"
                                         >
                                             <span className="relative z-10">i</span>
-                                            <span className="absolute inset-0 rounded-full bg-amber-300/50 animate-[ripple_2s_ease-out_infinite]" />
+                                            <span className="absolute inset-0 rounded-full bg-red-800/50 animate-[ripple_2s_ease-out_infinite]" />
                                         </button>
                                     </div>
                                     <div className="flex items-center gap-3">
@@ -239,7 +239,7 @@ export function ProductDetail() {
                             </div>
 
                             {/* CTA / Contact */}
-                            <div className="flex flex-col gap-3">
+                            <div className="flex flex-col gap-3 mt-35">
                                 <Link
                                     to="/contact"
                                     className="inline-flex items-center justify-center gap-3 bg-charcoal text-white py-3.5 rounded-xl font-bold hover:bg-charcoal-light transition-all shadow-medium"
@@ -249,7 +249,7 @@ export function ProductDetail() {
                                     </svg>
                                     Inquire About This Product
                                 </Link>
-                                <button
+                                {/* <button
                                     onClick={() => navigate(-1)}
                                     className="inline-flex items-center justify-center gap-2 text-graphite font-medium hover:text-charcoal transition-colors py-2"
                                 >
@@ -257,14 +257,14 @@ export function ProductDetail() {
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                                     </svg>
                                     Back to Products
-                                </button>
+                                </button> */}
                             </div>
                         </motion.div>
                     </div>
 
                     {/* Description - full width, lighter grey */}
                     {notebook.base_description && (
-                        <p className="text-base text-graphite/50 leading-relaxed mt-8 max-w-4xl">
+                        <p className="text-base text-slate-text leading-relaxed mt-8 w-full text-justify">
                             {notebook.base_description}
                         </p>
                     )}
@@ -282,7 +282,7 @@ export function ProductDetail() {
                             className="text-center mb-8"
                         >
                             <h2 className="text-2xl font-bold text-charcoal mb-2">Notebook Rulings</h2>
-                            <p className="text-graphite/60 text-base max-w-2xl mx-auto">
+                            <p className="text-amber-500 text-base max-w-2xl mx-auto">
                                 Available ruling styles for {notebook.name}
                             </p>
                         </motion.div>
