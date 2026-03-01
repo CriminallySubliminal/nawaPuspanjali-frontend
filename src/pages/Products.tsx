@@ -4,10 +4,13 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { NotebookService } from '../services/notebooks.service';
-import type { Notebook, LoadingState, FilterOptions } from '../types';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 import { EmptyState } from '../components/ui/EmptyState';
 import { NotebookCard } from '../components/notebook/NotebookCard';
+import pathsalaLogo from '../assets/images/logos/pathsala.png';
+import puspanjaliPlusLogo from '../assets/images/logos/puspanjali.png';
+import ruffLogo from '../assets/images/logos/ruff_copy.png';
+import bulletPlusLogo from '../assets/images/logos/bullet_plus.png';
 
 /**
  * Unified Products page - Consolidated browsing experience for notebooks.
@@ -295,15 +298,17 @@ export function Products() {
                             </div>
                         </div>
 
-                        {/* Brand Title Area */}
+                        {/* Brand Logo Area */}
                         {selectedBrand && (
                             <motion.div
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                key={selectedBrand.id}
+                                key={selectedBrand.name}
                                 className="text-center"
                             >
-                                <h2 className="text-3xl font-bold text-charcoal mb-2">{selectedBrand.name} Notebooks</h2>
+                                <h2 className="w-40 mx-auto">
+                                    <img src={logoMap.get(selectedBrand.slug)} alt={selectedBrand.name} />
+                                </h2>
                             </motion.div>
                         )}
 
@@ -478,5 +483,13 @@ export function Products() {
         </div>
     );
 }
+
+
+const logoMap = new Map<string, string>([
+    ['pathsala', pathsalaLogo],
+    ['puspanjali', puspanjaliPlusLogo],
+    ['campus-ruff', ruffLogo],
+    ['bullet-plus', bulletPlusLogo],
+])
 
 export default Products;

@@ -1,0 +1,12 @@
+/* Webfont: WALLYOZ-Regular */@font-face {
+    font-family: 'WALLYOZRegular';
+    src: url('WALLYOZ Regular.eot'); /* IE9 Compat Modes */
+    src: url('WALLYOZ Regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('WALLYOZ Regular.woff') format('woff'), /* Modern Browsers */
+         url('WALLYOZ Regular.woff2') format('woff2'), /* Modern Browsers */
+         url('WALLYOZ Regular.ttf') format('truetype'); /* Safari, Android, iOS */
+             font-style: normal;
+    font-weight: normal;
+    text-rendering: optimizeLegibility;
+}
+

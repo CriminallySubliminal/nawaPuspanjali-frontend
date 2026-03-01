@@ -12,6 +12,13 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'Wallyoz';
+  src: url('./assets/fonts/WALLOYZ/WALLYOZ/WALLYOZ Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
 /* ... existing code ... */
 
 @font-face {
@@ -159,6 +166,9 @@
   --font-sans: 'Moderustic', 'Crimson Text', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-serif: 'Crimson Text', Georgia, serif;
   --font-handwriting: 'Caveat', cursive;
+  --font-walloyz: 'Wallyoz', sans-serif;
+
+  --font-devnagari: adobe-devnagari, sans-serif;
 }
 
 * {

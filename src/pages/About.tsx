@@ -2,17 +2,10 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import GridPattern from '@/components/ui/grid-pattern';
 import { cn } from '@/lib/utils';
-import CircularGallery from '@/components/ui/CircularGallery';
+
 
 import frontPhoto from '@/assets/images/photos/front.webp';
-import factory1 from '@/assets/images/photos/factory-1.webp';
-import factory2 from '@/assets/images/photos/factory-2.webp';
-import factory3 from '@/assets/images/photos/factory-3.webp';
-import factory4 from '@/assets/images/photos/factory-4.webp';
-import factory5 from '@/assets/images/photos/factory-5.webp';
-import warehouse1 from '@/assets/images/photos/warehouse-1.webp';
-import warehouse2 from '@/assets/images/photos/warehouse-2.webp';
-import warehouse3 from '@/assets/images/photos/warehouse-3.webp';
+import documentSvg from '../assets/images/UIdesign/Document.svg';
 
 import team1 from '@/assets/images/test/pexels-kampus-8353841.webp';
 import team2 from '@/assets/images/test/pexels-katerina-holmes-5905497.webp';
@@ -53,7 +46,7 @@ export function About() {
                             {/* <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> */}
                             {/* Since 2056 B.S. */}
                         </div>
-                        <h1 className="text-5xl md:text-7xl font-bold text-charcoal mb-8 tracking-tight leading-tight">
+                        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold text-charcoal mb-8 tracking-tight leading-tight">
                             Crafting Nepal's <br className="hidden md:block" />
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-amber-400">
                                 Writing Legacy
@@ -72,7 +65,7 @@ export function About() {
             </section>
 
             {/* Section 1: Our Story (Text Left, Visual Right) */}
-            <section className="py-20 lg:py-20 relative z-10">
+            <section className="py-12 lg:py-20 relative z-10">
                 <div className="container-wide">
                     <div className="grid lg:grid-cols-2 gap-16 items-center">
                         <motion.div
@@ -125,18 +118,17 @@ export function About() {
                             transition={{ duration: 0.7 }}
                             className="relative"
                         >
-                            <div className="relative aspect-square lg:aspect-[4/3] rounded-2xl overflow-hidden bg-ivory border border-amber-100/50 shadow-2xl shadow-amber-900/5">
+                            <div className="relative aspect-square lg:aspect-[4/3] rounded-2xl overflow-hidden bg-transparent border border-amber-100/50">
                                 <img
-                                    src={frontPhoto}
-                                    alt="Nawa Puspanjali Factory Front"
+                                    src={documentSvg}
                                     className="absolute inset-0 w-full h-full object-cover"
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                                {/* <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" /> */}
 
-                                <div className="absolute bottom-8 left-8 right-8 bg-white/80 backdrop-blur-md p-6 rounded-xl border border-white/50 shadow-lg">
+                                {/* <div className="absolute bottom-8 left-8 right-8 bg-white/80 backdrop-blur-md p-6 rounded-xl border border-white/50 shadow-lg">
                                     <h3 className="font-serif font-bold text-charcoal mb-1 text-xl">Jyamire, Chitwan, Nepal</h3>
                                     <p className="text-sm text-slate-text">Our central hub for design and manufacturing, connecting creativity across the diverse landscapes of Nepal.</p>
-                                </div>
+                                </div> */}
                             </div>
 
                             <div className="absolute -top-10 -right-10 w-40 h-40 bg-amber-400/10 rounded-full blur-2xl -z-10" />
@@ -146,37 +138,9 @@ export function About() {
                 </div>
             </section>
 
-            {/* Section 2: Gallery */}
-            <section className="py-20 bg-ivory overflow-hidden">
-                <div className="container-wide mb-12 text-center">
-                    {/* <h2 className="text-3xl md:text-4xl font-bold text-charcoal mb-4">
-                        A Glimpse into Our World
-                    </h2>
-                    <p className="text-lg text-slate-text max-w-2xl mx-auto">
-                        From raw materials to finished masterpieces, witness the journey of perfection.
-                    </p> */}
-                </div>
-                <div className="h-[500px] w-full">
-                    <CircularGallery
-                        items={[
-                            { image: factory1, text: 'Precision Manufacturing' },
-                            { image: factory2, text: 'Quality Assurance' },
-                            { image: factory3, text: 'Production Floor' },
-                            { image: factory4, text: 'Modern Machinery' },
-                            { image: factory5, text: 'Artisanal Crafting' },
-                            { image: warehouse1, text: 'Organized Storage' },
-                            { image: warehouse2, text: 'Logistics Hub' },
-                            { image: warehouse3, text: 'Ready for Dispatch' },
-                        ]}
-                        bend={-3}
-                        textColor="#1f2937"
-                        borderRadius={0.05}
-                    />
-                </div>
-            </section>
 
             {/* Section 3: Quality (Visual Left, Text Right) */}
-            <section className="py-20 lg:py-24 relative z-10 bg-white/50 backdrop-blur-sm">
+            <section className="py-12 md:py-20 lg:py-24 relative z-10 bg-white/50 backdrop-blur-sm">
                 <div className="container-wide">
                     <div className="grid lg:grid-cols-2 gap-16 items-center">
                         <motion.div
@@ -254,7 +218,7 @@ export function About() {
             </section>
 
             {/* Section 4: Vision & Leadership */}
-            <section className="py-20 lg:py-32 relative z-10">
+            <section className="py-12 md:py-20 lg:py-32 relative z-10">
                 <div className="container-wide">
                     <div className="mb-16 md:text-center max-w-3xl mx-auto">
                         <motion.h2
@@ -379,7 +343,7 @@ export function About() {
             </section>
 
             {/* CTA Section */}
-            <section className="py-20 lg:py-32 relative z-10">
+            <section className="py-12 md:py-20 lg:py-32 relative z-10">
                 <div className="container-wide">
                     <div className="text-center">
                         <motion.div
@@ -388,7 +352,7 @@ export function About() {
                             viewport={{ once: true }}
                             className="inline-block p-1 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600"
                         >
-                            <div className="bg-ivory rounded-xl custom-border p-10 md:p-16 text-center">
+                            <div className="bg-ivory rounded-xl custom-border p-6 sm:p-8 md:p-16 text-center">
                                 <h2 className="text-3xl font-bold text-charcoal mb-6 font-serif">Start Your Journey with Us</h2>
                                 <p className="text-slate-text mb-8 max-w-lg mx-auto">
                                     Discover the difference a premium notebook makes to your productivity and creativity.
