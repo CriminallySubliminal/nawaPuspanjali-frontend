@@ -2,6 +2,12 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import GridPattern from '@/components/ui/grid-pattern';
 import { cn } from '@/lib/utils';
+import { useState, useRef, type FormEvent } from 'react';
+import emailjs from "@emailjs/browser";
+
+const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID
+const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID
+const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY
 
 const WHATSAPP_NUMBER = '9779800000000'; // Replace with actual number (country code + number, no +)
 const WHATSAPP_MESSAGE = encodeURIComponent(
@@ -31,6 +37,49 @@ const scaleIn = {
  * Modern Contact page with WhatsApp integration, glassmorphism cards, and rich UI.
  */
 export function Contact() {
+    const [status, setStatus] = useState("idle");
+    const [isHighlighted, setIsHighlighted] = useState(false);
+
+    const nameInputRef = useRef<HTMLInputElement>(null);
+    const formContainerRef = useRef<HTMLDivElement>(null);
+
+    const handleEmailAction = (e: React.MouseEvent) => {
+        e.preventDefault();
+
+        // Scroll to form
+        formContainerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        // Trigger highlight
+        setIsHighlighted(true);
+        setTimeout(() => setIsHighlighted(false), 2000);
+
+        // Focus input
+        setTimeout(() => {
+            nameInputRef.current?.focus();
+        }, 600); // Wait for scroll
+    };
+
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setStatus("sending");
+
+        const form = e.currentTarget;
+
+        try {
+            await emailjs.sendForm(
+                EMAILJS_SERVICE_ID,
+                EMAILJS_TEMPLATE_ID,
+                form,
+                EMAILJS_PUBLIC_KEY
+            );
+            setStatus("success");
+            form.reset();
+        } catch (err) {
+            console.error(err);
+            setStatus("error");
+        }
+    };
+
     return (
         <div className="min-h-screen bg-ivory relative overflow-hidden">
             {/* Background Grid Pattern */}
@@ -54,10 +103,6 @@ export function Contact() {
                         variants={fadeUp}
                         className="max-w-3xl mx-auto"
                     >
-                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-100/50 text-amber-800 text-sm font-medium mb-6 backdrop-blur-sm border border-amber-200/50">
-                            <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
-                            We'd love to hear from you
-                        </div>
                         <h1 className="text-5xl md:text-7xl font-bold text-charcoal mb-6 tracking-tight">
                             Let's{' '}
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-amber-400">
@@ -65,8 +110,7 @@ export function Contact() {
                             </span>
                         </h1>
                         <p className="text-xl text-slate-text max-w-2xl mx-auto leading-relaxed">
-                            Have questions about our products, want to place a bulk order, or
-                            interested in a partnership? We're here to help.
+                            Have questions about our products, want to place a bulk order? We're here to help.
                         </p>
                     </motion.div>
                 </div>
@@ -157,7 +201,7 @@ export function Contact() {
                                         Start a Conversation on WhatsApp
                                     </h3>
                                     <p className="text-white/80 text-sm md:text-base">
-                                        Get instant replies for orders, pricing, and inquiries — no forms needed!
+                                        Get instant replies for orders, pricing, and inquiries.
                                     </p>
                                 </div>
                             </div>
@@ -184,13 +228,19 @@ export function Contact() {
                     <div className="grid lg:grid-cols-5 gap-10">
                         {/* Contact Form - 3 cols */}
                         <motion.div
+                            ref={formContainerRef}
                             initial="hidden"
                             whileInView="visible"
                             viewport={{ once: true }}
                             variants={fadeUp}
                             className="lg:col-span-3"
                         >
-                            <div className="bg-white rounded-2xl p-8 md:p-10 shadow-medium border border-gray-100/80">
+                            <div className={cn(
+                                "bg-white rounded-2xl p-8 md:p-10 shadow-medium border transition-all duration-500",
+                                isHighlighted
+                                    ? "border-amber-500 ring-4 ring-amber-500/20 scale-[1.01] shadow-heavy"
+                                    : "border-gray-100/80"
+                            )}>
                                 <div className="flex items-center gap-3 mb-8">
                                     <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center">
                                         <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -203,9 +253,14 @@ export function Contact() {
                                     </div>
                                 </div>
 
-                                <form className="space-y-5">
+                                <form className="space-y-5" onSubmit={handleSubmit}>
                                     <div className="grid sm:grid-cols-2 gap-5">
-                                        <FormField label="Full Name" id="name" placeholder="Your full name" />
+                                        <FormField
+                                            label="Full Name"
+                                            id="name"
+                                            placeholder="Your full name"
+                                            inputRef={nameInputRef}
+                                        />
                                         <FormField label="Email" id="email" type="email" placeholder="your@email.com" />
                                     </div>
                                     <div className="grid sm:grid-cols-2 gap-5">
@@ -216,12 +271,12 @@ export function Contact() {
                                             </label>
                                             <select
                                                 id="subject"
+                                                name="subject"
                                                 className="w-full px-4 py-3.5 bg-ivory border border-warm-gray-dark rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition text-charcoal appearance-none cursor-pointer"
                                             >
                                                 <option value="">Select a topic</option>
                                                 <option value="order">Product Order</option>
                                                 <option value="bulk">Bulk / Wholesale</option>
-                                                <option value="partnership">Partnership</option>
                                                 <option value="feedback">Feedback</option>
                                                 <option value="other">Other</option>
                                             </select>
@@ -233,21 +288,36 @@ export function Contact() {
                                         </label>
                                         <textarea
                                             id="message"
+                                            name="message"
                                             rows={5}
                                             className="w-full px-4 py-3.5 bg-ivory border border-warm-gray-dark rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition resize-none text-charcoal"
                                             placeholder="Tell us what you need..."
                                         />
                                     </div>
+
+                                    {/* Status messages */}
+                                    {status === "success" && (
+                                        <p className="text-green-600 font-medium text-sm">
+                                            ✅ Message sent! We'll get back to you within 24 hours.
+                                        </p>
+                                    )}
+                                    {status === "error" && (
+                                        <p className="text-red-500 font-medium text-sm">
+                                            ❌ Something went wrong. Please try again.
+                                        </p>
+                                    )}
+
                                     <motion.button
                                         type="submit"
-                                        whileHover={{ scale: 1.02 }}
-                                        whileTap={{ scale: 0.98 }}
-                                        className="w-full px-6 py-4 bg-gradient-to-r from-charcoal to-charcoal-light text-white font-bold rounded-xl shadow-medium hover:shadow-heavy transition-all flex items-center justify-center gap-3"
+                                        disabled={status === "sending"}
+                                        whileHover={{ scale: status === "sending" ? 1 : 1.02 }}
+                                        whileTap={{ scale: status === "sending" ? 1 : 0.98 }}
+                                        className="w-full px-6 py-4 bg-gradient-to-r from-charcoal to-charcoal-light text-white font-bold rounded-xl shadow-medium hover:shadow-heavy transition-all flex items-center justify-center gap-3 disabled:opacity-60 disabled:cursor-not-allowed"
                                     >
                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                                         </svg>
-                                        Send Message
+                                        {status === "sending" ? "Sending..." : "Send Message"}
                                     </motion.button>
                                 </form>
                             </div>
@@ -319,16 +389,16 @@ export function Contact() {
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                         </svg>
                                     </a>
-                                    <a
-                                        href="mailto:pushpanjalicopy@gmail.com"
-                                        className="flex items-center gap-3 p-3 rounded-xl bg-purple-50 hover:bg-purple-100 border border-purple-100 transition-colors group"
+                                    <button
+                                        onClick={handleEmailAction}
+                                        className="w-full flex items-center gap-3 p-3 rounded-xl bg-purple-50 hover:bg-purple-100 border border-purple-100 transition-colors group text-left"
                                     >
                                         <EmailIcon className="w-5 h-5 text-purple-600" />
                                         <span className="text-sm font-semibold text-purple-800">Send an Email</span>
                                         <svg className="w-4 h-4 text-purple-500 ml-auto group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                         </svg>
-                                    </a>
+                                    </button>
                                     <Link
                                         to="/brands"
                                         className="flex items-center gap-3 p-3 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-100 transition-colors group"
@@ -606,13 +676,27 @@ function ContactCard({ icon, title, content, href, external, iconBg, iconColor }
     return inner;
 }
 
-function FormField({ label, id, type = 'text', placeholder }: { label: string; id: string; type?: string; placeholder: string }) {
+function FormField({
+    label,
+    id,
+    type = 'text',
+    placeholder,
+    inputRef
+}: {
+    label: string;
+    id: string;
+    type?: string;
+    placeholder: string;
+    inputRef?: React.RefObject<HTMLInputElement | null>;
+}) {
     return (
         <div>
             <label className="block text-sm font-semibold text-charcoal mb-2" htmlFor={id}>
                 {label}
             </label>
             <input
+                ref={inputRef}
+                name={id}
                 type={type}
                 id={id}
                 className="w-full px-4 py-3.5 bg-ivory border border-warm-gray-dark rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition text-charcoal"

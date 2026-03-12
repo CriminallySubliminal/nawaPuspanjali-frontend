@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import companyLogo from '../../assets/images/logos/company_logo.png';
 
 /**
  * Premium sticky navbar with glassmorphism effect.
@@ -50,8 +51,8 @@ export function Header() {
             animate={{ y: 0 }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
             className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${isScrolled
-                ? 'glass shadow-medium py-5'
-                : 'bg-transparent py-8'
+                ? 'glass shadow-medium py-3'
+                : 'bg-transparent py-5'
                 }`}
         >
             <div className="max-w-7xl mx-auto px-8 lg:px-12 w-full">
@@ -61,18 +62,16 @@ export function Header() {
                         to="/"
                         className="group flex items-center gap-4"
                     >
-                        {/* <motion.div
+                        <motion.img
+                            src={companyLogo}
+                            alt="Nawa Puspanjali Logo"
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            className="w-12 h-12 bg-brand-deep rounded-xl flex items-center justify-center shadow-medium"
-                        >
-                            <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                            </svg>
-                        </motion.div> */}
+                            className="h-10 w-auto object-contain"
+                        />
                         <div className="hidden sm:block">
-                            <span className="block text-2xl font-devnagari font-bold text-charcoal tracking-tight">नव पुष्पाण्जली</span>
-                            <span className="block text-xs text-teal-500 bg-transparent uppercase tracking-widest">Copy Tatha Stationery Udhyog Pvt. Ltd.</span>
+                            <span className="block text-xl lg:text-xl font-tourmaline font-semibold text-charcoal tracking-tight leading-tight">Nawa Puspanjali</span>
+                            <span className="block text-[10px] lg:text-xs text-teal-500 bg-transparent uppercase tracking-wider font-semibold">Copy Tatha Stationery Udhyog Pvt. Ltd.</span>
                         </div>
                     </Link>
 

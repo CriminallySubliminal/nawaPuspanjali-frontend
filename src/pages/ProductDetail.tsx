@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { NotebookService } from '../services/notebooks.service';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 import { EmptyState } from '../components/ui/EmptyState';
+import type { Size } from '../types';
 
 // Ruling Images
 import twoLinedImg from '../assets/images/rulings/2-Lined.png';
@@ -13,6 +14,43 @@ import graphImg from '../assets/images/rulings/Graph.png';
 import gridImg from '../assets/images/rulings/Grid.png';
 import spiralImg from '../assets/images/rulings/Spiral.png';
 import blankImg from '../assets/images/rulings/blank.avif';
+
+/**
+ * SizeBadgeWithPopover - A badge that shows dimensions in a popover on hover.
+ */
+function SizeBadgeWithPopover({ size }: { size: Size }) {
+    const [isHovered, setIsHovered] = useState(false);
+
+    return (
+        <div 
+            className="relative"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+        >
+            <span className="text-sm font-bold text-charcoal bg-ivory px-3 py-1 rounded-lg border border-warm-gray-dark/20 shadow-sm cursor-help block">
+                {size.name}
+            </span>
+            
+            <AnimatePresence>
+                {isHovered && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 5, scale: 0.95 }}
+                        className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-charcoal text-ivory text-xs font-bold rounded-none shadow-heavy z-50 whitespace-nowrap"
+                    >
+                        <div className="flex flex-col items-center gap-0.5">
+                            <span className="text-[10px] text-ivory/60  tracking-widest">Dimensions (Width x Height)</span>
+                            <span>{size.width} × {size.height} {size.unit}</span>
+                        </div>
+                        {/* Popover Arrow */}
+                        <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-charcoal" />
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </div>
+    );
+}
 
 /**
  * ProductDetail page - Shows detailed information for a notebook product.
@@ -51,7 +89,7 @@ export function ProductDetail() {
 
         // Group variants by size
         const sizeMap = new Map<string, {
-            size: string;
+            sizeObj: Size;
             sizeOrder: number;
             rulings: Map<string, { ruling: string; price: string; gsm: number }>;
         }>();
@@ -61,7 +99,7 @@ export function ProductDetail() {
 
             if (!sizeMap.has(sizeKey)) {
                 sizeMap.set(sizeKey, {
-                    size: variant.size.name,
+                    sizeObj: variant.size,
                     sizeOrder: variant.size.display_order,
                     rulings: new Map(),
                 });
@@ -84,7 +122,7 @@ export function ProductDetail() {
         return Array.from(sizeMap.values())
             .sort((a, b) => a.sizeOrder - b.sizeOrder)
             .map(sizeData => ({
-                size: sizeData.size,
+                size: sizeData.sizeObj,
                 rulings: Array.from(sizeData.rulings.values()),
             }));
     };
@@ -193,10 +231,8 @@ export function ProductDetail() {
                                         <span className="text-sm font-semibold text-charcoal/60 uppercase tracking-wide min-w-[130px] pt-0.5">Sizes</span>
                                         <span className="text-sm text-charcoal/40 pt-0.5">:</span>
                                         <div className="flex flex-wrap gap-2">
-                                            {derivedSizes.length > 0 ? derivedSizes.map(sizeName => (
-                                                <span key={sizeName} className="text-sm font-bold text-charcoal bg-ivory px-3 py-1 rounded-lg border border-warm-gray-dark/20 shadow-sm">
-                                                    {sizeName}
-                                                </span>
+                                            {derivedSizes.length > 0 ? derivedSizes.map(size => (
+                                                <SizeBadgeWithPopover key={size.id} size={size} />
                                             )) : (
                                                 <span className="text-sm text-graphite italic">N/A</span>
                                             )}

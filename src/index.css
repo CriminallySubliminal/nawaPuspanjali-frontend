@@ -19,6 +19,50 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'Tourmaline';
+  src: url('./assets/fonts/Tourmaline/Tourmaline-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Tourmaline';
+  src: url('./assets/fonts/Tourmaline/Tourmaline-Brush.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'indu';
+  src: url('./assets/fonts/Indu/ams.indu.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'barkhadi';
+  src: url('./assets/fonts/AMS_Barkhadi/ams.barakhadi-1.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Alkatra';
+  src: url('./assets/fonts/Alkatra/Alkatra-VariableFont_wght.ttf') format('truetype');
+  font-weight: 300 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Ananda';
+  src: url('./assets/fonts/Ananda/Ananda Lipi Bold Bt.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+
+
 /* ... existing code ... */
 
 @font-face {
@@ -169,6 +213,11 @@
   --font-walloyz: 'Wallyoz', sans-serif;
 
   --font-devnagari: adobe-devnagari, sans-serif;
+  --font-tourmaline: 'Tourmaline', sans-serif;
+  --font-indu: 'indu', sans-serif;
+  --font-barkhadi: 'barkhadi', sans-serif;
+  --font-alkatra: 'Alkatra', system-ui, sans-serif;
+  --font-ananda: 'Ananda', sans-serif;
 }
 
 * {

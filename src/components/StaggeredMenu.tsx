@@ -1,4 +1,4 @@
-import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { gsap } from 'gsap';
 
@@ -51,7 +51,17 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
   onMenuClose
 }: StaggeredMenuProps) => {
   const [open, setOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const openRef = useRef(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const panelRef = useRef<HTMLDivElement | null>(null);
   const preLayersRef = useRef<HTMLDivElement | null>(null);
@@ -418,6 +428,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
         <header
           className={`staggered-menu-header ${isFixed ? 'absolute top-0 left-0 w-full px-8 py-8 md:px-12 md:py-10' : 'relative h-full px-4'} flex items-center justify-between pointer-events-none z-[120]`}
           aria-label="Main navigation header"
+          data-scrolled={isScrolled}
         >
           {displayLogo && (
             <div className="sm-logo flex items-center select-none pointer-events-auto" aria-label="Logo">
@@ -542,6 +553,17 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
       <style>{`
 .sm-scope .staggered-menu-wrapper { position: relative; width: 100%; height: 100%; pointer-events: none; }
 .sm-scope .staggered-menu-header { position: relative; width: 100%; display: flex; align-items: center; justify-content: space-between; background: transparent; pointer-events: none; }
+@media (max-width: 1023px) {
+  .sm-scope .staggered-menu-header { 
+    background: rgba(250, 249, 247, 0.95); 
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    min-height: 64px;
+  }
+  .sm-scope .staggered-menu-header[data-scrolled="true"] {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04), 0 10px 24px rgba(0, 0, 0, 0.06);
+  }
+}
 .sm-scope [data-position='fixed'] .staggered-menu-header { position: absolute; top: 0; left: 0; }
 .sm-scope .staggered-menu-header > * { pointer-events: auto; }
 .sm-scope .sm-logo { display: flex; align-items: center; user-select: none; }

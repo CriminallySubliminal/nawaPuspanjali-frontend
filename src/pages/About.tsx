@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import frontPhoto from '@/assets/images/photos/front.webp';
 import documentSvg from '../assets/images/UIdesign/Document.svg';
 
+import termImg from '@/assets/images/logos/term.webp'
 import team1 from '@/assets/images/test/pexels-kampus-8353841.webp';
 import team2 from '@/assets/images/test/pexels-katerina-holmes-5905497.webp';
 import team3 from '@/assets/images/test/pexels-max-fischer-5211470.webp';
@@ -14,6 +15,12 @@ import team3 from '@/assets/images/test/pexels-max-fischer-5211470.webp';
 import founderImg from '@/assets/images/team/chandra_khanal.webp';
 import kumarImg from '@/assets/images/team/kumar_khanal.webp';
 import kiranImg from '@/assets/images/team/kiran_kumar_khanal.webp'
+import keshavImg from '@/assets/images/team/keshav.webp'
+import kishorImg from '@/assets/images/team/kishor.webp'
+
+import packagingImg from '@/assets/images/machines/packaging_machine.webp';
+import rulingImg from '@/assets/images/machines/ruling_machine.png';
+import bindingImg from '@/assets/images/machines/binding_machine.png';
 
 
 /**
@@ -42,22 +49,16 @@ export function About() {
                         transition={{ duration: 0.8, ease: "easeOut" }}
                         className="max-w-4xl mx-auto"
                     >
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-amber-100/50 text-amber-800 text-lg font-serif font-medium mb-6 backdrop-blur-sm border border-amber-200/50">
-                            {/* <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> */}
-                            {/* Since 2056 B.S. */}
-                        </div>
+
+                    <div className='flex gap-5 items-center justify-center mb-4'>
                         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold text-charcoal mb-8 tracking-tight leading-tight">
                             Crafting Nepal's <br className="hidden md:block" />
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-amber-400">
                                 Writing Legacy
                             </span>
-                            <br />
-                            Since 2056 B.S.
                         </h1>
-                        <p className="text-xl text-slate-text max-w-2xl mx-auto leading-relaxed">
-                            More than just paper and ink. We are on a mission to empower education
-                            and creativity through premium, sustainable stationery.
-                        </p>
+                        <img src={termImg} alt="" className='h-50' />
+                    </div>
                     </motion.div>
                 </div>
                 {/* Decorative background blur */}
@@ -166,16 +167,16 @@ export function About() {
                                     </div>
                                 </div>
                                 <div className="space-y-4">
-                                    <div className="aspect-[4/3] rounded-xl bg-teal-50 overflow-hidden shadow-lg border border-teal-50 relative group">
+                                    <div className="aspect-[4/3] top-60 rounded-xl bg-teal-50 overflow-hidden shadow-lg border border-teal-50 relative group">
                                         <div className="absolute inset-0 flex items-center justify-center text-teal-800/20 group-hover:text-teal-600/30 transition-colors">
                                             <svg className="w-16 h-16" fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" /></svg>
                                         </div>
                                     </div>
-                                    <div className="aspect-[3/4] rounded-xl bg-charcoal-light overflow-hidden shadow-lg border border-charcoal relative">
+                                    {/* <div className="aspect-[3/4] rounded-xl bg-charcoal-light overflow-hidden shadow-lg border border-charcoal relative">
                                         <div className="absolute inset-0 flex items-center justify-center">
-                                            <span className="text-white/80 font-serif italic text-3xl">Est. 2020</span>
+                                            <span className="text-white/80 font-serif italic text-3xl">Est. 2056 B.S.</span>
                                         </div>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                         </motion.div>
@@ -213,6 +214,111 @@ export function About() {
                                 ))}
                             </ul>
                         </motion.div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Section: Industry-Standard Machinery */}
+            <section className="py-12 md:py-20 lg:py-24 relative z-10 bg-ivory">
+                <div className="container-wide">
+                    <div className="mb-16 text-center max-w-3xl mx-auto">
+                        <motion.h2
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            className="text-3xl md:text-4xl font-bold text-charcoal mb-4"
+                        >
+                            State-of-the-Art Technology
+                        </motion.h2>
+                        <motion.p
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: 0.1 }}
+                            className="text-lg text-slate-text"
+                        >
+                            We leverage industry-leading machinery to ensure precision, efficiency, and consistent quality in every product.
+                        </motion.p>
+                    </div>
+
+                    <div className="space-y-24">
+                        {[
+                            {
+                                title: "Automatic Reel-to-Sheet Ruling Machine",
+                                subtitle: "Flexo Printing Excellence",
+                                description: "Our Automatic reel-to-sheet Ruling/Flexo Printing Machine consists of a shaft-based motorized reel stand with a digital web guide, a 2-color printing tower, a pile delivery station with a motorized vibrating jogger, and a control panel with an HMI. It is suitable for rule or flexo printing on paper in 2 colors, delivering sheets in cut length directly from the paper reel.",
+                                image: rulingImg,
+                                alignment: "left"
+                            },
+                            {
+                                title: "Automatic Shrink Wrapper",
+                                subtitle: "Seamless Packaging Solutions",
+                                description: "A fully automatic unmanned packaging machine with automatic film feeding, punching, and manual adjustment guide systems. Highly efficient and widely adapted for mass shrink packaging across various industries including printing, food, and electronics. A single machine is versatile enough for products of different heights and widths.",
+                                image: packagingImg,
+                                alignment: "right"
+                            },
+                            {
+                                title: "Nova B104E",
+                                subtitle: "Premium Binding Precision",
+                                description: "The Nova B104E is our specialized machinery for high-quality binding. It ensures durability and a perfect finish for all our notebooks, providing that signature flat-lay opening and long-lasting structural integrity.",
+                                image: bindingImg,
+                                alignment: "left"
+                            }
+                        ].map((machine, index) => (
+                            <div key={index} className={cn(
+                                "grid lg:grid-cols-2 gap-12 items-center",
+                                machine.alignment === "right" ? "lg:flex-row-reverse" : ""
+                            )}>
+                                <motion.div
+                                    initial={{ opacity: 0, x: machine.alignment === "left" ? -50 : 50 }}
+                                    whileInView={{ opacity: 1, x: 0 }}
+                                    viewport={{ once: true, margin: "-100px" }}
+                                    transition={{ duration: 0.8 }}
+                                    className={cn(
+                                        "relative group",
+                                        machine.alignment === "right" ? "lg:order-2" : ""
+                                    )}
+                                >
+                                    <div className="relative aspect-video rounded-2xl overflow-hidden bg-white shadow-2xl border border-amber-100/30">
+                                        <img
+                                            src={machine.image}
+                                            alt={machine.title}
+                                            className="absolute inset-0 w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-700"
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-tr from-charcoal/5 to-transparent pointer-events-none" />
+                                    </div>
+                                    {/* Decorative accents */}
+                                    <div className={cn(
+                                        "absolute -z-10 w-48 h-48 bg-amber-400/5 rounded-full blur-3xl",
+                                        machine.alignment === "left" ? "-top-10 -left-10" : "-bottom-10 -right-10"
+                                    )} />
+                                </motion.div>
+
+                                <motion.div
+                                    initial={{ opacity: 0, x: machine.alignment === "left" ? 50 : -50 }}
+                                    whileInView={{ opacity: 1, x: 0 }}
+                                    viewport={{ once: true, margin: "-100px" }}
+                                    transition={{ duration: 0.8 }}
+                                    className={cn(
+                                        machine.alignment === "right" ? "lg:order-1" : ""
+                                    )}
+                                >
+                                    <span className="text-amber-600 font-bold tracking-widest uppercase text-xs mb-3 block">
+                                        {machine.subtitle}
+                                    </span>
+                                    <h3 className="text-3xl font-bold text-charcoal mb-6 font-serif">
+                                        {machine.title}
+                                    </h3>
+                                    <p className="text-lg text-slate-text leading-relaxed mb-6">
+                                        {machine.description}
+                                    </p>
+                                    <div className="flex items-center gap-2 text-charcoal font-medium">
+                                        <div className="w-2 h-2 rounded-full bg-amber-500"></div>
+                                        <span>Industry Standard Quality</span>
+                                    </div>
+                                </motion.div>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </section>
@@ -304,10 +410,10 @@ export function About() {
                         {/* Level 2: The Partners */}
                         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 pt-8">
                             {[
-                                { name: "Keshav Khanal", role: "Managing Director", quote: "Innovation is respecting tradition while embracing the future." },
+                                { name: "Keshav Khanal", role: "Managing Director", quote: "Innovation is respecting tradition while embracing the future.", image: keshavImg },
                                 { name: "Kiran Kumar Khanal", role: "Director of Operations", quote: "Efficiency meets excellence in every page we produce.", image: kiranImg },
                                 { name: "Kumar Khanal", role: "Director of Quality", quote: "Perfection is not an accident; it is the result of high intention.", image: kumarImg },
-                                { name: "Kishor Khanal", role: "Director of Marketing", quote: "Connecting our stories with yours, one notebook at a time." }
+                                { name: "Kishor Khanal", role: "Director of Marketing", quote: "Connecting our stories with yours, one notebook at a time.", image: kishorImg }
                             ].map((partner: { name: string; role: string; quote: string; image?: string }, index) => (
                                 <motion.div
                                     key={index}

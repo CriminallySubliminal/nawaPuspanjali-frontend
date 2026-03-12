@@ -217,19 +217,19 @@ export function Products() {
         <div className="min-h-screen bg-ivory pb-24">
             {/* Header / Breadcrumb */}
             <section className="bg-white border-b border-warm-gray py-8">
-                <div className="max-w-7xl mx-auto px-8 lg:px-12">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 text-center md:text-left">
                     <nav className="text-sm text-graphite mb-4" aria-label="Breadcrumb">
                         <Link to="/" className="hover:text-charcoal transition-colors">Home</Link>
                         <span className="mx-3">{'>'}</span>
                         <span className="text-charcoal font-medium">Products</span>
                     </nav>
-                    <h1 className="text-4xl font-bold text-charcoal">Our Product Lines</h1>
+                    <h1 className="text-3xl md:text-4xl font-bold text-charcoal">Our Product Lines</h1>
                 </div>
             </section>
 
             {/* Selection UI */}
             <section className="py-12">
-                <div className="max-w-7xl mx-auto px-8 lg:px-12">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
                     <div className="flex flex-col gap-10">
 
                         {/* 1. Brand Selector (Horizontal scroll with buttons) */}
@@ -271,7 +271,7 @@ export function Products() {
                                 ref={scrollContainerRef}
                                 onScroll={checkScroll}
                                 data-scroll-container
-                                className="flex items-center gap-4 justify-center overflow-x-auto pb-6 px-16 scroll-smooth no-scrollbar"
+                                className="flex items-center md:justify-center gap-4 overflow-x-auto pb-6 px-4 sm:px-6 md:px-16 scroll-smooth no-scrollbar"
                                 style={{
                                     scrollbarWidth: 'none',
                                     msOverflowStyle: 'none',
@@ -313,7 +313,7 @@ export function Products() {
                         )}
 
                         {/* 2. Selectors Grid */}
-                        <div className="bg-white/50 backdrop-blur-sm rounded-[1.5rem] md:rounded-[2.5rem] p-6 md:p-10 border border-white/20 shadow-medium max-w-5xl mx-auto w-full">
+                        <div className="bg-white/50 backdrop-blur-sm rounded-[1.5rem] md:rounded-[2.5rem] p-4 sm:p-6 md:p-10 border border-white/20 shadow-medium max-w-5xl mx-auto w-full">
                             <div className="space-y-6 md:space-y-10">
                                 {/* Notebook Type */}
                                 {(!selectedBrandId || availableTypes.length > 0) && (

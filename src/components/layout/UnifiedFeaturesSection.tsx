@@ -37,7 +37,7 @@ export default function UnifiedFeaturesSection() {
                 </motion.div>
 
                 <GlowingCards
-                    gridClassName="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6 auto-rows-[minmax(140px,auto)] md:auto-rows-[minmax(200px,auto)]"
+                    gridClassName="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6 auto-rows-[minmax(140px,auto)] md:auto-rows-[minmax(200px,auto)]"
                     glowRadius={30}
                     glowOpacity={0.6}
                     className="w-full"
@@ -81,7 +81,7 @@ export default function UnifiedFeaturesSection() {
                     </GlowingCard>
 
                     {/* Feature 3: Made in Nepal */}
-                    <GlowingCard glowColor="#4338ca" className="col-span-2 md:col-span-1 bg-ivory dark:bg-zinc-900 border-charcoal/5 shadow-subtle hover:shadow-medium">
+                    <GlowingCard glowColor="#4338ca" className="col-span-1 sm:col-span-2 md:col-span-1 bg-ivory dark:bg-zinc-900 border-charcoal/5 shadow-subtle hover:shadow-medium">
                         <div
                             className="w-10 h-10 md:w-14 md:h-14 rounded-xl flex items-center justify-center mb-3 md:mb-6"
                             style={{ backgroundColor: `#4338ca15` }}

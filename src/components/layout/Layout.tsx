@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import GridPattern from '@/components/ui/grid-pattern';
 import { cn } from '@/lib/utils';
 import StaggeredMenu from '../StaggeredMenu';
+import companyLogo from '../../assets/images/logos/company_logo.png';
 
 interface LayoutProps {
     children: ReactNode;
@@ -66,15 +67,14 @@ export function Layout({ children }: LayoutProps) {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.6, ease: "easeOut" }}
-                            className='md:max-w-xs'
+                            className='md:max-w-md'
                         >
-                            <div className="flex items-center gap-3 mb-8">
-                                <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-amber-600 rounded-xl flex items-center justify-center shadow-lg shadow-amber-500/25">
-                                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                                    </svg>
+                            <div className="flex items-center gap-4 mb-6">
+                                <img src={companyLogo} alt="Nawa Puspanjali Logo" className="h-14 w-auto object-contain" />
+                                <div className="flex flex-col">
+                                    <span className="text-3xl font-ananda font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent leading-tight">{"gj k'ikf~hnL"}</span>
+                                    <span className="text-xl font-ananda font-bold text-gray-400 uppercase tracking-wider">{"कपी तथा स्टेशनरी उद्योग प्रा=लि="}</span>
                                 </div>
-                                <span className="text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">Puspanjali</span>
                             </div>
                             <p className="text-slate-text leading-relaxed mb-8 text-sm lg:text-base">
                                 Premium notebook manufacturing from Nepal. Crafting exceptional stationery
