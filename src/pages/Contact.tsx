@@ -9,7 +9,7 @@ const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID
 const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID
 const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY
 
-const WHATSAPP_NUMBER = '9779800000000'; // Replace with actual number (country code + number, no +)
+const WHATSAPP_NUMBER = '9779855057383';
 const WHATSAPP_MESSAGE = encodeURIComponent(
     'Hello! I am interested in Puspanjali notebooks. Could you help me with more information?'
 );
@@ -144,8 +144,8 @@ export function Contact() {
                             {
                                 icon: <PhoneIcon />,
                                 title: 'Call Us',
-                                content: '+977-56-XXXXXX',
-                                href: 'tel:+97756XXXXXX',
+                                content: '+9779855057383',
+                                href: 'tel:+9779855057383',
                                 color: 'from-amber-500/10 to-orange-500/10',
                                 iconBg: 'bg-amber-100',
                                 iconColor: 'text-amber-600',
